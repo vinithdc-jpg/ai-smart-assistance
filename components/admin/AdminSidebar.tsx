@@ -64,7 +64,7 @@ export function AdminSidebar({
                 key={tab}
                 type="button"
                 onClick={() => handleMobileTabChange(tab)}
-                className={`w-full rounded-lg px-3 py-3 text-left text-sm font-medium transition ${
+                className={`w-full rounded-md px-3 py-3 text-left text-sm font-medium transition ${
                   activeTab === tab
                     ? "bg-primary text-white shadow-sm"
                     : "text-muted hover:bg-primary-soft hover:text-foreground"
@@ -76,7 +76,7 @@ export function AdminSidebar({
             <button
               type="button"
               onClick={handleLogout}
-              className="mt-2 flex w-full items-center gap-2 rounded-lg border-t border-border px-3 py-3 text-left text-sm font-medium text-red-600 transition hover:bg-red-50 dark:hover:bg-red-950/30"
+              className="mt-2 flex w-full items-center gap-2 rounded-md border-t border-border px-3 py-3 text-left text-sm font-medium text-red-600 transition hover:bg-red-50 dark:hover:bg-red-950/30"
             >
               <LogOut className="h-4 w-4" />
               <span>Sign Out</span>
@@ -94,7 +94,7 @@ export function AdminSidebar({
           <button
             type="button"
             onClick={() => setActiveTab("dashboard")}
-            className={`flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left cursor-pointer transition ${
+            className={`flex w-full items-center gap-3 rounded-md px-3 py-2.5 text-left cursor-pointer transition ${
               activeTab === "dashboard"
                 ? "bg-primary text-white shadow-sm"
                 : "text-muted hover:bg-primary-soft hover:text-foreground"
@@ -114,7 +114,7 @@ export function AdminSidebar({
           <button
             type="button"
             onClick={() => setActiveTab("clubs")}
-            className={`flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left cursor-pointer transition ${
+            className={`flex w-full items-center gap-3 rounded-md px-3 py-2.5 text-left cursor-pointer transition ${
               activeTab === "clubs"
                 ? "bg-primary text-white shadow-sm"
                 : "text-muted hover:bg-primary-soft hover:text-foreground"
@@ -139,7 +139,7 @@ export function AdminSidebar({
                 void loadStaff(selectedClubId);
               }
             }}
-            className={`flex w-full items-center gap-3 rounded-lg px-3 py-2.5 cursor-pointer text-left transition ${
+            className={`flex w-full items-center gap-3 rounded-md px-3 py-2.5 cursor-pointer text-left transition ${
               activeTab === "staff"
                 ? "bg-primary text-white shadow-sm"
                 : "text-muted hover:bg-primary-soft hover:text-foreground"
@@ -154,7 +154,7 @@ export function AdminSidebar({
           <button
             type="button"
             onClick={() => setActiveTab("members")}
-            className={`flex w-full items-center gap-3 rounded-lg px-3 py-2.5 cursor-pointer text-left transition ${
+            className={`flex w-full items-center gap-3 rounded-md px-3 py-2.5 cursor-pointer text-left transition ${
               activeTab === "members"
                 ? "bg-primary text-white shadow-sm"
                 : "text-muted hover:bg-primary-soft hover:text-foreground"
@@ -194,7 +194,7 @@ export function AdminSidebar({
           <button
             type="button"
             onClick={() => setActiveTab("Report")}
-            className={`flex w-full items-center gap-3 rounded-lg px-3 py-2.5 cursor-pointer text-left transition ${
+            className={`flex w-full items-center gap-3 rounded-md px-3 py-2.5 cursor-pointer text-left transition ${
               activeTab === "Report"
                 ? "bg-primary text-white shadow-sm"
                 : "text-muted hover:bg-primary-soft hover:text-foreground"
@@ -209,7 +209,7 @@ export function AdminSidebar({
           <button
             type="button"
             onClick={() => setActiveTab("settings")}
-            className={`flex w-full items-center gap-3 rounded-lg px-3 py-2.5 cursor-pointer text-left transition ${
+            className={`flex w-full items-center gap-3 rounded-md px-3 py-2.5 cursor-pointer text-left transition ${
               activeTab === "settings"
                 ? "bg-primary text-white shadow-sm"
                 : "text-muted hover:bg-primary-soft hover:text-foreground"
@@ -231,7 +231,7 @@ export function AdminSidebar({
           <button
             type="button"
             onClick={handleLogout}
-            className="flex w-full items-center gap-2 rounded-lg px-2 py-2 cursor-pointer text-xs font-medium text-muted transition hover:bg-red-50 hover:text-red-500"
+            className="flex w-full items-center gap-2 rounded-md px-2 py-2 cursor-pointer text-xs font-medium text-muted transition hover:bg-red-50 hover:text-red-500"
           >
             <span>↪</span>
             <span>Sign Out</span>
