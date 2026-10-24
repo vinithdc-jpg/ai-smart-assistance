@@ -20,14 +20,17 @@ export function GstSettings({
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-xl font-semibold text-foreground">GST & Tax Configuration</h2>
+        <h2 className="text-xl font-semibold text-foreground">
+          GST & Tax Configuration
+        </h2>
         <p className="text-sm text-muted">
-          Configure the standard Goods and Services Tax (GST) percentage applied to transaction receipts across all clubs.
+          Configure the standard Goods and Services Tax (GST) percentage applied
+          to transaction receipts across all clubs.
         </p>
       </div>
 
       {gstSuccess && (
-        <div className="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">
+        <div className="rounded-md border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">
           {gstSuccess}
         </div>
       )}
@@ -38,20 +41,19 @@ export function GstSettings({
         </div>
       )}
 
-      <div className="grid gap-6 lg:grid-cols-3">
+      <div className="grid gap-6 lg:grid-cols-3 rounded-md">
         <form
           onSubmit={handleSaveGstRate}
-          className="rounded-2xl border border-border bg-white p-6 shadow-sm space-y-5 lg:col-span-2"
+          className="rounded-md border border-border bg-white p-6 shadow-sm space-y-5 lg:col-span-2"
         >
           <div className="space-y-2">
             <p className="text-xs text-muted leading-relaxed">
-              This rate will be used by staff members when creating transactions. Calculated values (Amount Excl. GST, CGST, SGST, Total GST) are automatically computed using this percentage.
+              This rate will be used by staff members when creating
+              transactions. Calculated values (Amount Excl. GST, CGST, SGST,
+              Total GST) are automatically computed using this percentage.
             </p>
             <div className="form-floating-field relative mt-2 max-w-xs">
-              <label
-                htmlFor="gstRateInput"
-                className="form-floating-label"
-              >
+              <label htmlFor="gstRateInput" className="form-floating-label">
                 System GST Percentage (%)
               </label>
               <input
@@ -62,7 +64,10 @@ export function GstSettings({
                 step="0.1"
                 value={gstRateInput}
                 onChange={(e) => setGstRateInput(e.target.value)}
-                className={fieldClass + " form-floating-input form-floating-input-with-suffix pr-10 font-semibold text-base"}
+                className={
+                  fieldClass +
+                  " form-floating-input form-floating-input-with-suffix pr-10 font-semibold text-base"
+                }
                 placeholder=" "
                 required
               />
@@ -82,7 +87,7 @@ export function GstSettings({
                   key={preset}
                   type="button"
                   onClick={() => setGstRateInput(String(preset))}
-                  className={`rounded-xl border px-3 py-1.5 text-xs font-semibold cursor-pointer transition ${
+                  className={`rounded-md border px-3 py-1.5 text-xs font-semibold cursor-pointer transition ${
                     Number(gstRateInput) === preset
                       ? "border-primary bg-primary text-white shadow-xs"
                       : "border-border bg-[#f7f8ff] text-foreground hover:border-primary/40 hover:bg-primary-soft"
@@ -98,21 +103,25 @@ export function GstSettings({
             <button
               type="submit"
               disabled={gstLoading}
-              className="rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-primary-hover disabled:opacity-50 cursor-pointer"
+              className="rounded-md bg-primary px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-primary-hover disabled:opacity-50 cursor-pointer"
             >
               {gstLoading ? "Saving..." : "Save GST Configuration"}
             </button>
           </div>
         </form>
 
-        <div className="rounded-2xl border border-border bg-[#f7f8ff] p-6 shadow-sm space-y-4">
+        <div className="rounded-md border border-border bg-[#f7f8ff] p-6 shadow-sm space-y-4">
           <div className="flex items-center gap-2 border-b border-border pb-3">
             <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-primary text-xs font-bold text-white">
               %
             </span>
             <div>
-              <h3 className="text-sm font-semibold text-foreground">Formula Preview</h3>
-              <p className="text-[11px] text-muted">Based on ₹10,000 received</p>
+              <h3 className="text-sm font-semibold text-foreground">
+                Formula Preview
+              </h3>
+              <p className="text-[11px] text-muted">
+                Based on ₹10,000 received
+              </p>
             </div>
           </div>
 
@@ -121,32 +130,50 @@ export function GstSettings({
               const rate = Number(gstRateInput) || 0;
               const samplePayment = 10000;
               const sampleExcl = samplePayment;
-              const sampleCgst = rate > 0 ? Math.round(((sampleExcl * (rate / 2)) / 100) * 100) / 100 : 0;
-              const sampleSgst = rate > 0 ? Math.round(((sampleExcl * (rate / 2)) / 100) * 100) / 100 : 0;
-              const sampleGst = Math.round((sampleCgst + sampleSgst) * 100) / 100;
-              const sampleTotalWithGst = Math.round((sampleExcl + sampleGst) * 100) / 100;
+              const sampleCgst =
+                rate > 0
+                  ? Math.round(((sampleExcl * (rate / 2)) / 100) * 100) / 100
+                  : 0;
+              const sampleSgst =
+                rate > 0
+                  ? Math.round(((sampleExcl * (rate / 2)) / 100) * 100) / 100
+                  : 0;
+              const sampleGst =
+                Math.round((sampleCgst + sampleSgst) * 100) / 100;
+              const sampleTotalWithGst =
+                Math.round((sampleExcl + sampleGst) * 100) / 100;
 
               return (
                 <>
                   <div className="flex justify-between py-1 border-b border-border/60">
                     <span>Amount Excl. GST (Payment):</span>
-                    <strong className="font-mono text-foreground">₹{sampleExcl.toFixed(2)}</strong>
+                    <strong className="font-mono text-foreground">
+                      ₹{sampleExcl.toFixed(2)}
+                    </strong>
                   </div>
                   <div className="flex justify-between py-1 border-b border-border/60">
                     <span>CGST ({(rate / 2).toFixed(1)}%):</span>
-                    <strong className="font-mono text-emerald-600">₹{sampleCgst.toFixed(2)}</strong>
+                    <strong className="font-mono text-emerald-600">
+                      ₹{sampleCgst.toFixed(2)}
+                    </strong>
                   </div>
                   <div className="flex justify-between py-1 border-b border-border/60">
                     <span>SGST ({(rate / 2).toFixed(1)}%):</span>
-                    <strong className="font-mono text-emerald-600">₹{sampleSgst.toFixed(2)}</strong>
+                    <strong className="font-mono text-emerald-600">
+                      ₹{sampleSgst.toFixed(2)}
+                    </strong>
                   </div>
                   <div className="flex justify-between py-1 border-b border-border/60">
                     <span>Total GST ({rate}%):</span>
-                    <strong className="font-mono text-amber-600">₹{sampleGst.toFixed(2)}</strong>
+                    <strong className="font-mono text-amber-600">
+                      ₹{sampleGst.toFixed(2)}
+                    </strong>
                   </div>
                   <div className="flex justify-between py-1 pt-2 font-semibold text-foreground">
                     <span>Total Amount With GST:</span>
-                    <strong className="font-mono text-sm text-primary">₹{sampleTotalWithGst.toFixed(2)}</strong>
+                    <strong className="font-mono text-sm text-primary">
+                      ₹{sampleTotalWithGst.toFixed(2)}
+                    </strong>
                   </div>
                 </>
               );

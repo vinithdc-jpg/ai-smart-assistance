@@ -12,7 +12,7 @@ export default function StatCard2({
   icon,
 }: StatCardProps) {
   return (
-    <div className="rounded-2xl border border-border bg-card p-5 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
+    <div className="rounded-md border border-border bg-card p-5 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
       <div className="flex items-start justify-between">
         <div>
           <p className="text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground">
@@ -24,7 +24,7 @@ export default function StatCard2({
           </h2>
         </div>
 
-        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary-soft text-primary">
+        <div className="flex h-9 w-9 items-center justify-center rounded-md bg-primary-soft text-primary">
           {icon}
         </div>
       </div>

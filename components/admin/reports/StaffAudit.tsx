@@ -30,7 +30,7 @@ export default function StaffAudit({
   onRetry: () => void;
 }) {
   return (
-    <section className="rounded-2xl border border-border bg-card p-4 shadow-sm sm:p-5">
+    <section className="rounded-md border border-border bg-card p-4 shadow-sm sm:p-5">
       <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
         <div>
           <h2 className="text-base font-bold text-foreground sm:text-lg">
@@ -63,7 +63,7 @@ export default function StaffAudit({
             id="staff-report-status"
             value={status}
             onChange={(event) => onStatusChange(event.target.value)}
-            className="h-10 w-full rounded-lg border-border bg-background px-3 text-xs text-foreground sm:w-40"
+            className="h-10 w-full rounded-md border-border bg-background px-3 text-xs text-foreground sm:w-40"
           >
             <option value="all">All staff</option>
             <option value="active">Active</option>
@@ -90,7 +90,7 @@ export default function StaffAudit({
 
       <div className="mt-5 overflow-x-auto">
         <div style={{ minWidth: 850 }}>
-          <div className="grid grid-cols-[2fr_1.5fr_.8fr_.8fr_1.2fr_.7fr] rounded-lg bg-primary-soft/60 px-4 py-3 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+          <div className="grid grid-cols-[2fr_1.5fr_.8fr_.8fr_1.2fr_.7fr] rounded-md bg-primary-soft/60 px-4 py-3 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
             <span>Staff Member</span>
             <span>Role</span>
             <span>Members</span>

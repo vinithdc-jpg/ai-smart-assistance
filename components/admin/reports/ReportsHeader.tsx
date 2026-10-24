@@ -27,7 +27,7 @@ export default function ReportsHeader({
   const [dateError, setDateError] = useState("");
 
   return (
-    <section className="rounded-2xl border border-border bg-card p-4 shadow-sm sm:p-5">
+    <section className="rounded-md border border-border bg-card p-4 shadow-sm sm:p-5">
       <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
         <div>
           <h1 className="text-xl font-bold tracking-tight text-foreground sm:text-2xl">
@@ -58,7 +58,7 @@ export default function ReportsHeader({
             type="button"
             disabled={exporting}
             onClick={() => onExport(format)}
-            className="flex h-10 w-full min-w-28 items-center justify-center gap-2 rounded-lg bg-primary px-4 text-sm font-semibold text-white shadow-sm transition hover:bg-primary-hover disabled:cursor-wait disabled:opacity-60 sm:w-auto"
+            className="flex h-10 w-full min-w-28 items-center justify-center gap-2 rounded-md bg-primary px-4 text-sm font-semibold text-white shadow-sm transition hover:bg-primary-hover disabled:cursor-wait disabled:opacity-60 sm:w-auto"
           >
             <Download size={16} />
             {exporting ? "Preparing..." : "Export"}
@@ -73,7 +73,7 @@ export default function ReportsHeader({
               type="button"
               key={item}
               onClick={() => onRangeChange(item)}
-              className={`rounded-lg px-3 py-2 text-xs font-semibold transition ${
+              className={`rounded-md px-3 py-2 text-xs font-semibold transition ${
                 item === activeRange
                   ? "bg-primary text-white shadow-sm"
                   : "bg-primary-soft text-foreground hover:bg-primary/10"
@@ -110,7 +110,7 @@ export default function ReportsHeader({
             <span className="form-floating-label">End date</span>
             <input name="endDate" type="date" required defaultValue={endDate} placeholder=" " className="form-floating-input h-10 rounded-lg border border-border bg-background px-3 text-sm text-foreground" />
           </label>
-          <button type="submit" className="h-10 rounded-lg bg-primary px-4 text-sm font-semibold text-white hover:bg-primary-hover">
+          <button type="submit" className="h-10 rounded-md bg-primary px-4 text-sm font-semibold text-white hover:bg-primary-hover">
             Apply dates
           </button>
         </form>

@@ -67,7 +67,7 @@ export default function ClubPaymentStatusChart() {
   const plotHeight = plotBottom - plotTop;
 
   return (
-    <section className="rounded-2xl border border-border bg-card p-4 shadow-sm sm:p-5">
+    <section className="rounded-md border border-border bg-card p-4 shadow-sm sm:p-5">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div>
           <h2 className="text-lg font-bold text-foreground">Club-wise Payment Status</h2>
