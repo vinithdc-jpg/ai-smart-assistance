@@ -43,6 +43,7 @@ import {
 } from "@/lib/transactionsApi";
 import { getGstRate } from "@/lib/settingsApi";
 import ConfirmModal from "@/components/ui/ConfirmModal";
+import FormDialog from "@/components/ui/FormDialog";
 import PopMessage, { type PopMessageType } from "@/components/ui/PopMessage";
 import type { Member, Transaction } from "@/types/member";
 import { toast } from "react-toastify";
@@ -174,7 +175,6 @@ export default function MemberPaymentSummary() {
     const frame = window.requestAnimationFrame(() => {
       const form = document.getElementById(formId);
       if (!form) return;
-      form.scrollIntoView({ behavior: "smooth", block: "center" });
       form
         .querySelector<HTMLElement>(
           "input:not(:disabled), select:not(:disabled), textarea:not(:disabled)",
@@ -355,12 +355,6 @@ export default function MemberPaymentSummary() {
     setTransactionForm(emptyTransactionForm());
     setTransactionFormError("");
     setShowTransactionForm(true);
-    window.requestAnimationFrame(() => {
-      document.getElementById("transaction-form")?.scrollIntoView({
-        behavior: "smooth",
-        block: "start",
-      });
-    });
   }
 
   function startEditingTransaction(transaction: Transaction) {
@@ -757,6 +751,13 @@ export default function MemberPaymentSummary() {
           </div>
 
           {showMemberForm ? (
+            <FormDialog
+              isOpen={showMemberForm}
+              onClose={resetForm}
+              isLoading={formLoading}
+              ariaLabel={editingMember ? "Edit member" : "Add member"}
+              className="max-w-4xl"
+            >
             <div id={editingMember ? "member-edit-form" : undefined}>
               <MemberForm
                 form={form}
@@ -768,6 +769,7 @@ export default function MemberPaymentSummary() {
                 onCancel={resetForm}
               />
             </div>
+            </FormDialog>
           ) : null}
 
           {error ? (
@@ -804,6 +806,17 @@ export default function MemberPaymentSummary() {
                 </div>
                 <div className="min-w-0 space-y-4 xl:col-start-2 xl:row-start-1 xl:row-span-4">
                   {showTransactionForm ? (
+                    <FormDialog
+                      isOpen={showTransactionForm}
+                      onClose={resetTransactionForm}
+                      isLoading={transactionFormLoading}
+                      ariaLabel={
+                        editingTransaction
+                          ? "Edit transaction"
+                          : "Add transaction"
+                      }
+                      className="max-w-5xl"
+                    >
                     <div id="transaction-form">
                       <TransactionForm
                         form={transactionForm}
@@ -825,6 +838,7 @@ export default function MemberPaymentSummary() {
                         onCancel={resetTransactionForm}
                       />
                     </div>
+                    </FormDialog>
                   ) : null}
                   <TransactionHistory
                     transactions={memberTransactions}

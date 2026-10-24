@@ -107,10 +107,10 @@ export function DashboardOverview() {
         />
       </div>
 
-      <div className="rounded-lg border border-border bg-white p-5">
+      <div className="rounded-md border border-border bg-white p-5">
         <h2 className="text-sm font-semibold text-foreground">Club health</h2>
         <div className="mt-4 grid gap-4 md:grid-cols-2">
-          <div className="flex items-center justify-between rounded-lg border border-emerald-100 bg-emerald-50/50 p-4">
+          <div className="flex items-center justify-between rounded-md border border-emerald-100 bg-emerald-50/50 p-4">
             <p className="text-sm font-medium text-emerald-800">Active</p>
             <p className="text-2xl font-semibold tabular-nums text-emerald-900">
               {stats.activeClubs.toLocaleString()}

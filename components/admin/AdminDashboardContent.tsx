@@ -157,7 +157,6 @@ export default function AdminDashboardContent() {
     const frame = window.requestAnimationFrame(() => {
       const form = document.getElementById(formId);
       if (!form) return;
-      form.scrollIntoView({ behavior: "smooth", block: "center" });
       form
         .querySelector<HTMLElement>(
           "input:not(:disabled), select:not(:disabled), textarea:not(:disabled)",

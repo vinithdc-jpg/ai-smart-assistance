@@ -151,6 +151,7 @@ test.describe("Admin frontend", () => {
       page.getByRole("heading", { name: "Club Directory" }),
     ).toBeVisible();
     await page.getByRole("button", { name: "Add Club" }).click();
+    await expect(page.getByRole("dialog")).toBeVisible();
     await expect(
       page.getByRole("heading", { name: "Create New Club" }),
     ).toBeVisible();
@@ -164,6 +165,17 @@ test.describe("Admin frontend", () => {
     await expect(
       page.getByRole("heading", { name: "Staff Management" }),
     ).toBeVisible();
+    await page.getByRole("button", { name: "All Clubs" }).click();
+    await page.getByRole("button", { name: "Test Club" }).click();
+    await page.getByRole("button", { name: "Add Staff" }).click();
+    await expect(page.getByRole("dialog")).toBeVisible();
+    await expect(
+      page.getByRole("heading", { name: "Add Staff" }),
+    ).toBeVisible();
+    await page
+      .getByRole("dialog")
+      .getByRole("button", { name: "Cancel" })
+      .click();
 
     await page.getByRole("button", { name: /members/i }).click();
     await expect(

@@ -5,6 +5,7 @@ import { ActionIconButton } from "@/components/admin/ActionIconButton";
 import { Search } from "lucide-react";
 import DatePicker from "@/components/Member/DatePicker";
 import Select from "@/components/motion/select";
+import FormDialog from "@/components/ui/FormDialog";
 
 const editFieldClass =
   "mt-1 h-10 w-full rounded-xl border border-border bg-[#f7f8ff] px-3 text-sm text-foreground outline-none transition-colors hover:border-primary/40 focus:border-primary focus:bg-white focus:ring-4 focus:ring-ring/40";
@@ -52,10 +53,17 @@ export function TransactionsOverview({
   return (
     <div className="space-y-4">
       {editingTransaction && (
+        <FormDialog
+          isOpen
+          onClose={onCancelEdit}
+          isLoading={editLoading}
+          ariaLabel="Edit transaction"
+          className="max-w-5xl"
+        >
         <form
           id="admin-transaction-edit-form"
           onSubmit={onEditSubmit}
-          className="rounded-2xl border border-border bg-white p-4 shadow-sm"
+          className="rounded-xl border border-border bg-white p-4 shadow-sm"
         >
           <div className="mb-4 flex items-center justify-between gap-3">
             <div>
@@ -135,8 +143,9 @@ export function TransactionsOverview({
             {editLoading ? "Saving..." : "Save changes"}
           </button>
         </form>
+        </FormDialog>
       )}
-      <div className="flex flex-col gap-3 rounded-2xl border border-border bg-white p-4 shadow-sm md:flex-row md:items-center md:justify-between">
+      <div className="flex flex-col gap-3 rounded-md border border-border bg-white p-4 shadow-sm md:flex-row md:items-center md:justify-between">
         <div>
           <h2 className="text-lg font-semibold text-foreground">
             Transaction History
@@ -162,7 +171,7 @@ export function TransactionsOverview({
         </div>
       </div>
 
-      <div className="overflow-hidden rounded-2xl border border-border bg-white shadow-sm">
+      <div className="overflow-hidden rounded-md border border-border bg-white shadow-sm">
         {loadingTransactions ? (
           <div className="p-6 text-sm text-muted">Loading transactions...</div>
         ) : transactions.length === 0 ? (

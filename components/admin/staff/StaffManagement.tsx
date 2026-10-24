@@ -3,6 +3,7 @@ import type { AdminClub } from "@/types/admin";
 import type { Staff } from "@/types/auth";
 import { Pagination } from "@/components/admin/Pagination";
 import Select from "@/components/motion/select";
+import FormDialog from "@/components/ui/FormDialog";
 
 export function StaffManagement({
   clubs,
@@ -64,7 +65,7 @@ export function StaffManagement({
 
   return (
     <div className="space-y-4">
-      <div className="flex flex-col gap-5 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm md:flex-row md:items-center md:justify-between">
+      <div className="flex flex-col gap-5 rounded-md border border-slate-200 bg-white p-5 shadow-sm md:flex-row md:items-center md:justify-between">
         {/* Header */}
         <div className="min-w-0">
           <div className="flex items-center gap-2">
@@ -118,7 +119,7 @@ export function StaffManagement({
             disabled={!selectedClubId || selectedClubId === "all"}
             className="
         inline-flex h-10 w-full shrink-0 items-center justify-center gap-2
-        rounded-lg
+        rounded-md
         bg-primary
         px-4
         text-sm font-semibold text-white
@@ -143,92 +144,102 @@ export function StaffManagement({
       {showStaffForm &&
         selectedClubId &&
         (selectedClubId !== "all" || editingStaff) && (
-          <form
-            id="admin-staff-edit-form"
-            onSubmit={handleStaffSubmit}
-            className="rounded-2xl border border-border bg-white p-4 shadow-sm"
+          <FormDialog
+            isOpen={showStaffForm}
+            onClose={resetStaffForm}
+            isLoading={staffFormLoading}
+            ariaLabel={editingStaff ? "Edit staff member" : "Add staff member"}
+            className="max-w-2xl"
           >
-            <div className="mb-4 flex items-center justify-between">
-              <h3 className="text-base font-semibold text-foreground">
-                {editingStaff ? "Edit Staff" : "Add Staff"}
-              </h3>
-              <button
-                type="button"
-                onClick={resetStaffForm}
-                className="text-sm text-muted hover:text-foreground cursor-pointer"
-              >
-                Cancel
-              </button>
-            </div>
+            <form
+              id="admin-staff-edit-form"
+              onSubmit={handleStaffSubmit}
+              className="rounded-xl border border-border bg-white p-4 shadow-sm"
+            >
+              <div className="mb-4 flex items-center justify-between">
+                <h3 className="text-base font-semibold text-foreground">
+                  {editingStaff ? "Edit Staff" : "Add Staff"}
+                </h3>
+                <button
+                  type="button"
+                  onClick={resetStaffForm}
+                  className="text-sm text-muted hover:text-foreground cursor-pointer"
+                >
+                  Cancel
+                </button>
+              </div>
 
-            <div className="grid gap-4 md:grid-cols-2">
-              <label className="form-floating-field">
-                <span className="form-floating-label">First Name</span>
-                <input
-                  type="text"
-                  value={staffForm.firstName}
-                  placeholder=" "
-                  onChange={(event) =>
-                    setStaffForm({
-                      ...staffForm,
-                      firstName: event.target.value,
-                    })
-                  }
-                  className={`${fieldClass} form-floating-input`}
-                  required
-                />
-              </label>
+              <div className="grid gap-4 md:grid-cols-2">
+                <label className="form-floating-field">
+                  <span className="form-floating-label">First Name</span>
+                  <input
+                    type="text"
+                    value={staffForm.firstName}
+                    placeholder=" "
+                    onChange={(event) =>
+                      setStaffForm({
+                        ...staffForm,
+                        firstName: event.target.value,
+                      })
+                    }
+                    className={`${fieldClass} form-floating-input`}
+                    required
+                  />
+                </label>
 
-              <label className="form-floating-field">
-                <span className="form-floating-label">Last Name</span>
-                <input
-                  type="text"
-                  value={staffForm.lastName}
-                  placeholder=" "
-                  onChange={(event) =>
-                    setStaffForm({ ...staffForm, lastName: event.target.value })
-                  }
-                  className={`${fieldClass} form-floating-input`}
-                  required
-                />
-              </label>
+                <label className="form-floating-field">
+                  <span className="form-floating-label">Last Name</span>
+                  <input
+                    type="text"
+                    value={staffForm.lastName}
+                    placeholder=" "
+                    onChange={(event) =>
+                      setStaffForm({
+                        ...staffForm,
+                        lastName: event.target.value,
+                      })
+                    }
+                    className={`${fieldClass} form-floating-input`}
+                    required
+                  />
+                </label>
 
-              <label className="form-floating-field md:col-span-2">
-                <span className="form-floating-label">Email</span>
-                <input
-                  type="email"
-                  value={staffForm.email}
-                  placeholder=" "
-                  onChange={(event) =>
-                    setStaffForm({ ...staffForm, email: event.target.value })
-                  }
-                  pattern="^[^\s@]+@[^\s@]+\.[^\s@]{2,}$"
-                  title="Please enter a valid email address, such as example@example.com"
-                  className={`${fieldClass} form-floating-input`}
-                  required
-                />
-              </label>
+                <label className="form-floating-field md:col-span-2">
+                  <span className="form-floating-label">Email</span>
+                  <input
+                    type="email"
+                    value={staffForm.email}
+                    placeholder=" "
+                    onChange={(event) =>
+                      setStaffForm({ ...staffForm, email: event.target.value })
+                    }
+                    pattern="^[^\s@]+@[^\s@]+\.[^\s@]{2,}$"
+                    title="Please enter a valid email address, such as example@example.com"
+                    className={`${fieldClass} form-floating-input`}
+                    required
+                  />
+                </label>
 
-              {!editingStaff && (
-                <div className="md:col-span-2">
-                  <label className="form-floating-field">
-                    <span className="form-floating-label">Password</span>
-                    <input
-                      type="password"
-                      value={staffForm.password}
-                      placeholder=" "
-                      onChange={(event) =>
-                        setStaffForm({
-                          ...staffForm,
-                          password: event.target.value,
-                        })
-                      }
-                      className={`${fieldClass} form-floating-input`}
-                      required
-                    />
-                  </label>
-                  {staffForm.password &&
-                    (() => {
+                {!editingStaff && (
+                  <div className="md:col-span-2">
+                    <label className="form-floating-field">
+                      <span className="form-floating-label">Password</span>
+                      <input
+                        type="password"
+                        value={staffForm.password}
+                        placeholder=" "
+                        onChange={(event) =>
+                          setStaffForm({
+                            ...staffForm,
+                            password: event.target.value,
+                          })
+                        }
+                        className={`${fieldClass} form-floating-input`}
+                        required
+                      />
+                    </label>
+                    {staffForm.password &&
+                      (() => {
                         let score = 0;
                         if (staffForm.password.length >= 8) score += 1;
                         if (/[A-Z]/.test(staffForm.password)) score += 1;
@@ -267,57 +278,58 @@ export function StaffManagement({
                             </span>
                           </div>
                         );
-                    })()}
-                </div>
-              )}
+                      })()}
+                  </div>
+                )}
 
-              <label className="space-y-2 text-sm text-muted">
-                <span>Role</span>
-                <Select
-                  value={staffForm.role}
-                  onChange={(event) =>
-                    setStaffForm({ ...staffForm, role: event.target.value })
-                  }
-                  className="h-10"
+                <label className="space-y-2 text-sm text-muted">
+                  <span>Role</span>
+                  <Select
+                    value={staffForm.role}
+                    onChange={(event) =>
+                      setStaffForm({ ...staffForm, role: event.target.value })
+                    }
+                    className="h-10"
+                  >
+                    <option value="staff">Staff</option>
+                    <option value="manager">Manager</option>
+                    <option value="admin">Admin</option>
+                  </Select>
+                </label>
+
+                <label className="space-y-2 text-sm text-muted">
+                  <span>Status</span>
+                  <Select
+                    value={staffForm.status}
+                    onChange={(event) =>
+                      setStaffForm({ ...staffForm, status: event.target.value })
+                    }
+                    className="h-10"
+                  >
+                    <option value="active">Active</option>
+                    <option value="inactive">Inactive</option>
+                  </Select>
+                </label>
+              </div>
+
+              <div className="mt-4 flex">
+                <button
+                  type="submit"
+                  disabled={staffFormLoading}
+                  className="rounded-md bg-primary px-4 py-2 text-sm font-semibold text-white disabled:opacity-60 cursor-pointer"
                 >
-                  <option value="staff">Staff</option>
-                  <option value="manager">Manager</option>
-                  <option value="admin">Admin</option>
-                </Select>
-              </label>
-
-              <label className="space-y-2 text-sm text-muted">
-                <span>Status</span>
-                <Select
-                  value={staffForm.status}
-                  onChange={(event) =>
-                    setStaffForm({ ...staffForm, status: event.target.value })
-                  }
-                  className="h-10"
-                >
-                  <option value="active">Active</option>
-                  <option value="inactive">Inactive</option>
-                </Select>
-              </label>
-            </div>
-
-            <div className="mt-4 flex">
-              <button
-                type="submit"
-                disabled={staffFormLoading}
-                className="rounded-xl bg-primary px-4 py-2 text-sm font-semibold text-white disabled:opacity-60 cursor-pointer"
-              >
-                {staffFormLoading
-                  ? "Saving..."
-                  : editingStaff
-                    ? "Update Staff"
-                    : "Create Staff"}
-              </button>
-            </div>
-          </form>
+                  {staffFormLoading
+                    ? "Saving..."
+                    : editingStaff
+                      ? "Update Staff"
+                      : "Create Staff"}
+                </button>
+              </div>
+            </form>
+          </FormDialog>
         )}
 
-      <div className="overflow-hidden rounded-2xl border border-border bg-white shadow-sm">
+      <div className="overflow-hidden rounded-md border border-border bg-white shadow-sm">
         {!selectedClubId ? (
           <div className="p-6 text-sm text-muted">
             Select a club to view staff.

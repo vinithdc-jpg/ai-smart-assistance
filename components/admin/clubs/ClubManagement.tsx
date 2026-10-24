@@ -2,6 +2,7 @@ import { ActionIconButton } from "@/components/admin/ActionIconButton";
 import { Pagination } from "@/components/admin/Pagination";
 import type { AdminClub } from "@/types/admin";
 import Select from "@/components/motion/select";
+import FormDialog from "@/components/ui/FormDialog";
 
 export function ClubManagement({
   clubs,
@@ -42,11 +43,11 @@ export function ClubManagement({
   onPageChange: (page: number) => void;
 }) {
   const fieldClass =
-    "h-10 w-full rounded-xl border border-border bg-background px-3 text-sm text-foreground outline-none focus:border-primary focus:ring-4 focus:ring-ring/40 disabled:opacity-50";
+    "h-10 w-full rounded-md border border-border bg-background px-3 text-sm text-foreground outline-none focus:border-primary focus:ring-4 focus:ring-ring/40 disabled:opacity-50";
 
   return (
     <div className="space-y-4">
-      <div className="flex flex-col gap-4 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex flex-col gap-4 rounded-md border border-slate-200 bg-white p-5 shadow-sm sm:flex-row sm:items-center sm:justify-between">
         <div>
           <div className="flex items-center gap-2">
             <h2 className="text-lg font-semibold text-slate-900">
@@ -71,7 +72,7 @@ export function ClubManagement({
           }}
           className="
       inline-flex h-10 items-center justify-center gap-2
-      rounded-lg
+      rounded-md
       bg-primary
       px-4
       text-sm font-semibold text-white
@@ -90,16 +91,26 @@ export function ClubManagement({
       </div>
 
       {showClubForm && (
-        <form
-          id="admin-club-edit-form"
-          onSubmit={handleClubSubmit}
-          className="overflow-hidden rounded-2xl border border-border bg-white shadow-sm"
+        <FormDialog
+          isOpen={showClubForm}
+          onClose={resetClubForm}
+          isLoading={clubFormLoading}
+          ariaLabel={editingClub ? "Edit club" : "Create new club"}
+          className="max-w-2xl"
         >
+            <form
+              id="admin-club-edit-form"
+              onSubmit={handleClubSubmit}
+              className="overflow-hidden rounded-xl border border-border bg-white shadow-[0_24px_80px_rgba(19,22,42,0.18)]"
+            >
           {/* Header */}
           <div className="border-b border-border px-6 py-5">
             <div className="flex items-start justify-between gap-4">
               <div>
-                <h3 className="text-lg font-semibold tracking-tight text-foreground">
+                <h3
+                  id="admin-club-form-title"
+                  className="text-lg font-semibold tracking-tight text-foreground"
+                >
                   {editingClub ? "Edit Club" : "Create New Club"}
                 </h3>
 
@@ -239,7 +250,7 @@ export function ClubManagement({
             <button
               type="button"
               onClick={resetClubForm}
-              className="rounded-xl border border-border bg-white px-5 py-2.5 text-sm font-medium text-foreground transition-all hover:bg-muted/10"
+              className="rounded-lg border border-border bg-white px-5 py-2.5 text-sm font-medium text-foreground transition-all hover:bg-muted/10"
             >
               Cancel
             </button>
@@ -247,7 +258,7 @@ export function ClubManagement({
             <button
               type="submit"
               disabled={clubFormLoading}
-              className="rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-all hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
+              className="rounded-lg bg-primary px-3 py-2.5 text-sm font-semibold text-white shadow-sm transition-all hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
             >
               {clubFormLoading ? (
                 <span className="flex items-center justify-center gap-2">
@@ -261,7 +272,8 @@ export function ClubManagement({
               )}
             </button>
           </div>
-        </form>
+            </form>
+        </FormDialog>
       )}
 
       <div className="overflow-hidden rounded-2xl border border-border bg-white shadow-sm">

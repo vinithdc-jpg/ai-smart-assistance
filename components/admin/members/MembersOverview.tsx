@@ -1,8 +1,11 @@
 import type { ApiMember } from "@/lib/membersApi";
 import { Pagination } from "@/components/admin/Pagination";
 import { ActionIconButton } from "@/components/admin/ActionIconButton";
-import MemberForm, { type MemberFormState } from "@/components/Member/MemberForm";
+import MemberForm, {
+  type MemberFormState,
+} from "@/components/Member/MemberForm";
 import { Search } from "lucide-react";
+import FormDialog from "@/components/ui/FormDialog";
 
 export function MembersOverview({
   memberClubFilter,
@@ -33,28 +36,40 @@ export function MembersOverview({
   editLoading: boolean;
   editError: string;
   onEdit: (member: ApiMember) => void;
-  onFormChange: (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
+  onFormChange: (
+    event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+  ) => void;
   onEditSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
   onCancelEdit: () => void;
 }) {
   return (
     <div className="space-y-4">
       {editingMember && (
-        <div id="admin-member-edit-form">
-          <MemberForm
-            form={memberForm}
-            editing
-            loading={editLoading}
-            error={editError}
-            onChange={onFormChange}
-            onSubmit={onEditSubmit}
-            onCancel={onCancelEdit}
-          />
-        </div>
+        <FormDialog
+          isOpen
+          onClose={onCancelEdit}
+          isLoading={editLoading}
+          ariaLabel="Edit member"
+          className="max-w-3xl"
+        >
+          <div id="admin-member-edit-form">
+            <MemberForm
+              form={memberForm}
+              editing
+              loading={editLoading}
+              error={editError}
+              onChange={onFormChange}
+              onSubmit={onEditSubmit}
+              onCancel={onCancelEdit}
+            />
+          </div>
+        </FormDialog>
       )}
-      <div className="flex flex-col gap-3 rounded-2xl border border-border bg-white p-4 shadow-sm md:flex-row md:items-center md:justify-between">
+      <div className="flex flex-col gap-3 rounded-md border border-border bg-white p-4 shadow-sm md:flex-row md:items-center md:justify-between">
         <div>
-          <h2 className="text-lg font-semibold text-foreground">Members Overview</h2>
+          <h2 className="text-lg font-semibold text-foreground">
+            Members Overview
+          </h2>
           <p className="text-sm text-muted">
             Super admin can view all member data or filter by club.
           </p>
@@ -76,7 +91,7 @@ export function MembersOverview({
         </div>
       </div>
 
-      <div className="overflow-hidden rounded-2xl border border-border bg-white shadow-sm">
+      <div className="overflow-hidden rounded-md border border-border bg-white shadow-sm">
         {loadingMembers ? (
           <div className="p-6 text-sm text-muted">Loading members...</div>
         ) : members.length === 0 ? (
@@ -102,10 +117,17 @@ export function MembersOverview({
                       {member.first_name} {member.last_name}
                     </td>
                     <td className="px-4 py-3 text-muted">{member.member_id}</td>
-                    <td className="px-4 py-3 text-muted">{member.email || "—"}</td>
-                    <td className="px-4 py-3 text-muted">{member.phone || "—"}</td>
+                    <td className="px-4 py-3 text-muted">
+                      {member.email || "—"}
+                    </td>
+                    <td className="px-4 py-3 text-muted">
+                      {member.phone || "—"}
+                    </td>
                     <td className="px-4 py-3 text-muted">{member.club_id}</td>
-                    <td className="px-4 py-3 text-muted"><span className="m-1 font-bold">₹</span>{member.pending_amount}</td>
+                    <td className="px-4 py-3 text-muted">
+                      <span className="m-1 font-bold">₹</span>
+                      {member.pending_amount}
+                    </td>
                     <td className="px-4 py-3 text-right">
                       <ActionIconButton
                         onClick={() => onEdit(member)}
@@ -119,7 +141,11 @@ export function MembersOverview({
             </table>
           </div>
         )}
-        <Pagination page={page} totalPages={totalPages} onPageChange={onPageChange} />
+        <Pagination
+          page={page}
+          totalPages={totalPages}
+          onPageChange={onPageChange}
+        />
       </div>
     </div>
   );
