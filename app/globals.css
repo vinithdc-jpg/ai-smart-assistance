@@ -731,6 +731,102 @@ html.dark tbody tr:hover {
   background-color: #20242b;
 }
 
+.chat-composer-input,
+.chat-composer-input:focus {
+  display: block;
+  width: 100%;
+  min-height: 3.25rem !important;
+  max-height: 10rem;
+  margin: 0;
+  padding: 0.35rem 0.25rem 0.9rem !important;
+  resize: none;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  color: var(--foreground) !important;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.chat-composer-input::placeholder {
+  color: var(--muted-foreground) !important;
+  opacity: 0.8;
+}
+
+.chat-composer-input:focus-visible {
+  outline: none !important;
+}
+
+.chat-composer-toolbar {
+  display: flex;
+  min-height: 2.5rem;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.chat-composer-effort {
+  display: inline-flex;
+  min-height: 2.35rem;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0 0.7rem;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--background);
+  color: var(--foreground);
+  transition: border-color 150ms ease, background-color 150ms ease;
+}
+
+.chat-composer-effort:hover {
+  border-color: var(--ring);
+  background: var(--accent);
+}
+
+.chat-composer-effort-icon {
+  display: inline-flex;
+  height: 0.9rem;
+  align-items: end;
+  gap: 2px;
+}
+
+.chat-composer-effort-icon i {
+  width: 3px;
+  border-radius: 2px;
+  background: var(--muted-foreground);
+}
+
+.chat-composer-effort-icon i:nth-child(1) {
+  height: 0.4rem;
+}
+
+.chat-composer-effort-icon i:nth-child(2) {
+  height: 0.65rem;
+}
+
+.chat-composer-effort-icon i:nth-child(3) {
+  height: 0.9rem;
+}
+
+.chat-composer-effort select {
+  width: auto !important;
+  min-height: 2rem !important;
+  padding: 0 1.1rem 0 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  color: var(--foreground) !important;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.chat-composer-effort select:focus {
+  border: 0 !important;
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;

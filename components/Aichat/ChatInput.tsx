@@ -13,6 +13,7 @@ export default function ChatInput({
   disabled = false,
 }: ChatInputProps) {
   const [message, setMessage] = useState("");
+  const [effort, setEffort] = useState("Medium");
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
 
   useEffect(() => {
@@ -45,12 +46,12 @@ export default function ChatInput({
   };
 
   return (
-    <footer className="z-30 w-full shrink-0 border-t border-border/60 bg-background/90 px-3 py-2.5 backdrop-blur-md sm:px-6 sm:py-3 md:px-8">
+    <footer className="z-30 w-full shrink-0 bg-background/90 px-3 py-3 backdrop-blur-md sm:px-6 sm:py-4 md:px-8">
       <form onSubmit={handleSubmit} className="mx-auto w-full max-w-4xl">
-        <div className="flex flex-col overflow-hidden rounded-xl border border-border bg-card shadow-[0_8px_30px_rgba(0,0,0,0.12)] transition-all duration-200 focus-within:border-primary focus-within:ring-4 focus-within:ring-ring/40 sm:rounded-2xl">
+        <div className="chat-composer rounded-[1.5rem] border border-border bg-card p-3 shadow-[0_8px_30px_rgba(0,0,0,0.12)] transition-all duration-200 focus-within:border-primary/60 focus-within:ring-2 focus-within:ring-ring/20 sm:p-4">
           <textarea
             ref={textareaRef}
-            className="w-full max-h-40 min-h-12 resize-none bg-transparent px-3.5 pt-3 pb-2 text-sm leading-relaxed text-foreground placeholder:text-muted/60 outline-none sm:min-h-13 sm:px-4 sm:pt-3.5"
+            className="chat-composer-input"
             placeholder="Ask anything about members, transactions, AMC status..."
             id="ai-input"
             rows={1}
@@ -60,28 +61,32 @@ export default function ChatInput({
             disabled={disabled}
           />
 
-          <div className="flex items-center justify-between border-t border-border/40 bg-card/90 px-3 py-2">
-            <div className="flex items-center gap-1.5 text-xs text-muted">
-              <span className="hidden sm:inline-block text-[11px]">
-                Press{" "}
-                <kbd className="rounded-md border border-border bg-background px-1.5 py-0.5 font-mono text-[10px] text-foreground">
-                  Enter
-                </kbd>{" "}
-                to send,{" "}
-                <kbd className="rounded-md border border-border bg-background px-1.5 py-0.5 font-mono text-[10px] text-foreground">
-                  Shift + Enter
-                </kbd>{" "}
-                for new line
+          <div className="chat-composer-toolbar">
+            <label className="chat-composer-effort">
+              <span className="chat-composer-effort-icon" aria-hidden="true">
+                <i />
+                <i />
+                <i />
               </span>
-            </div>
+              <select
+                aria-label="Response effort"
+                value={effort}
+                onChange={(event) => setEffort(event.target.value)}
+                disabled={disabled}
+              >
+                <option>Low</option>
+                <option>Medium</option>
+                <option>High</option>
+              </select>
+            </label>
 
             <SendButton disabled={disabled || !message.trim()} />
           </div>
         </div>
       </form>
 
-      <p className="mx-auto mt-1.5 hidden max-w-4xl text-center text-[11px] text-muted sm:mt-2 sm:block">
-        Smart Ledger AI assists with ledger calculations and club policy information.
+      <p className="mx-auto mt-2 hidden max-w-4xl text-center text-[11px] text-muted sm:block">
+        Press Enter to send, or Shift + Enter for a new line.
       </p>
     </footer>
   );
