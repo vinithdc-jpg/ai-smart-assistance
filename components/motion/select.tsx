@@ -8,7 +8,7 @@ import React, {
   isValidElement,
   ReactNode,
 } from "react";
-import { ChevronDown, Check } from "lucide-react";
+import { ChevronsUpDown, Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 type SelectProps = {
@@ -103,37 +103,16 @@ export default function Select({
         type="button"
         disabled={disabled}
         onClick={() => setOpen((prev) => !prev)}
-        className={cn(`
-          form-field-trigger
-          flex w-full items-center justify-between
-          h-11
-          rounded-xl border border-border
-          bg-[#f7f8ff] px-3.5 dark:bg-background
-          text-sm text-foreground
-          transition-all duration-200
-          outline-none
-          hover:border-primary/40
-          focus:border-primary
-          focus:bg-white
-          dark:focus:bg-background
-          focus:ring-4 focus:ring-ring/40
-          disabled:cursor-not-allowed
-          disabled:bg-muted
-          disabled:text-muted
-        `, className)}
+        className={cn(
+          className,
+          "form-field-trigger flex h-10 w-full items-center justify-between rounded-xl border border-[#333] bg-[#1b1b1b] px-3.5 text-sm text-[#f5f5f5] outline-none transition-colors hover:border-[#484848] focus-visible:border-[#555] focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-60 dark:border-[#333] dark:bg-[#1b1b1b] dark:text-[#f5f5f5]",
+        )}
       >
-        <span className={selectedOption ? "" : "text-slate-400"}>
+        <span className={selectedOption ? "" : "text-[#a1a1a1]"}>
           {selectedOption?.label ?? placeholder}
         </span>
 
-        <ChevronDown
-          size={18}
-          className={`
-            shrink-0 text-muted
-            transition-transform duration-200
-            ${open ? "rotate-180" : ""}
-          `}
-        />
+        <ChevronsUpDown size={16} className="shrink-0 text-[#c4c4c4]" />
       </button>
 
       {/* Custom Dropdown */}
@@ -145,10 +124,10 @@ export default function Select({
             max-h-64
             overflow-y-auto
             rounded-xl
-            border border-slate-200
-            bg-white dark:border-border dark:bg-card
+            border border-[#303030]
+            bg-[#1c1c1c]
             p-1.5
-            shadow-[0_16px_36px_rgba(15,23,42,0.16)]
+            shadow-[0_16px_36px_rgba(0,0,0,0.45)]
           "
         >
           {options.map((option) => {
@@ -161,15 +140,15 @@ export default function Select({
                 disabled={option.disabled}
                 onClick={() => handleSelect(option.value)}
                 className={`
-                  flex w-full items-center justify-between
+                  flex w-full items-center justify-start gap-3
                   rounded-lg
-                  px-3 py-2.5
+                  px-2.5 py-1.5
                   text-left text-sm
                   transition-colors
                   ${
                     selected
-                      ? "bg-primary-soft font-semibold text-primary"
-                      : "text-foreground hover:bg-muted"
+                      ? "font-semibold text-[#f5f5f5]"
+                      : "text-[#e5e5e5] hover:bg-[#2a2a2a]"
                   }
                   ${
                     option.disabled
@@ -178,11 +157,11 @@ export default function Select({
                   }
                 `}
               >
+                <Check
+                  size={16}
+                  className={`shrink-0 ${selected ? "opacity-100" : "opacity-0"}`}
+                />
                 <span>{option.label}</span>
-
-                {selected && (
-                  <Check size={16} className="shrink-0 text-primary" />
-                )}
               </button>
             );
           })}
