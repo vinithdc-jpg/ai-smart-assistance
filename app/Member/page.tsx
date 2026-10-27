@@ -729,7 +729,7 @@ export default function MemberPaymentSummary() {
             onRecordPayment={openCreateTransactionForm}
           />
 
-          <div className="relative z-20 rounded-2xl border border-border bg-white px-3 py-3 shadow-[0_10px_30px_rgba(31,35,80,0.04)] sm:rounded-3xl sm:px-4">
+          <div className="relative z-20 min-h-[88px] rounded-2xl border border-border bg-card px-4 py-4 sm:rounded-3xl sm:px-5">
             <MemberSearch
               members={members}
               selectedMember={selectedApiMember}
