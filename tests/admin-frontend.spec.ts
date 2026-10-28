@@ -7,7 +7,11 @@ const admin = {
   role: "super_admin",
 };
 
-async function mockAdminApi(page: Page, initiallyAuthenticated = false) {
+async function mockAdminApi(
+  page: Page,
+  initiallyAuthenticated = false,
+  adminMeStatus?: number,
+) {
   let authenticated = initiallyAuthenticated;
   const clubs = [
     {
@@ -26,8 +30,8 @@ async function mockAdminApi(page: Page, initiallyAuthenticated = false) {
     let body: unknown = { success: true };
 
     if (path.endsWith("/AdminAuth/adminMe")) {
-      status = authenticated ? 200 : 401;
-      body = authenticated
+      status = adminMeStatus ?? (authenticated ? 200 : 401);
+      body = status === 200
         ? { success: true, admin }
         : { success: false, message: "Unauthorized" };
     } else if (path.endsWith("/AdminAuth/adminLogin")) {
@@ -116,6 +120,10 @@ async function mockAdminApi(page: Page, initiallyAuthenticated = false) {
       body: JSON.stringify(body),
     });
   });
+
+  return (status: number) => {
+    adminMeStatus = status;
+  };
 }
 
 async function signInAsAdmin(page: Page) {
@@ -138,6 +146,26 @@ test.describe("Admin frontend", () => {
     await expect(
       page.getByRole("heading", { name: "Welcome back, Administrator" }),
     ).toBeVisible();
+  });
+
+  test("fails closed and allows retry when admin session verification fails", async ({
+    page,
+  }) => {
+    const setAdminMeStatus = await mockAdminApi(page, true, 503);
+
+    await page.goto("/Admin/dashboard");
+
+    await expect(
+      page.getByText("Unable to verify your admin session. Please try again.", {
+        exact: true,
+      }),
+    ).toBeVisible();
+    await expect(page.getByText("Total Clubs")).toHaveCount(0);
+
+    setAdminMeStatus(200);
+    await page.getByRole("button", { name: "Retry" }).click();
+
+    await expect(page.getByText("Total Clubs")).toBeVisible();
   });
 
   test("signs in and renders every admin dashboard section", async ({ page }) => {

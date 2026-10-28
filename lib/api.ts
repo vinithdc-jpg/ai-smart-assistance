@@ -1,6 +1,6 @@
 const API_URL =
   process.env.NEXT_PUBLIC_API_URL ||
-  "http://localhost:5000/api";
+  "https://smart-leger-server.onrender.com/api";
 
 interface RequestOptions
   extends RequestInit {
@@ -15,7 +15,7 @@ async function apiRequest<T>(
 ): Promise<T> {
   const method = (options.method || "GET").toUpperCase();
   const requestKey =
-    method === "GET"
+    method === "GET" && !options.signal
       ? JSON.stringify([
           `${API_URL}${endpoint}`,
           method,

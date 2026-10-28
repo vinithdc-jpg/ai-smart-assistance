@@ -21,9 +21,10 @@ export async function adminLogout(): Promise<{
   });
 }
 
-export async function getAdminMe(): Promise<AdminMeResponse> {
+export async function getAdminMe(signal?: AbortSignal): Promise<AdminMeResponse> {
   return apiRequest<AdminMeResponse>("/AdminAuth/adminMe", {
     method: "GET",
+    signal,
   });
 }
 
@@ -145,4 +146,3 @@ export async function deleteStaff(
 
 // GST Settings
 export { getGstRate, updateGstRate } from "./settingsApi";
-
