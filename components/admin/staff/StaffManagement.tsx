@@ -149,7 +149,7 @@ export function StaffManagement({
             onClose={resetStaffForm}
             isLoading={staffFormLoading}
             ariaLabel={editingStaff ? "Edit staff member" : "Add staff member"}
-            className="max-w-2xl"
+            className="max-h-[calc(100dvh-2rem)] max-w-2xl sm:max-h-[calc(100dvh-3rem)]"
           >
             <form
               id="admin-staff-edit-form"

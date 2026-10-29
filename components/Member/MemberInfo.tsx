@@ -26,9 +26,9 @@ export default function MemberInfo({
   const status = (member.status || "active").toLowerCase();
 
   return (
-    <section className="rounded-3xl border border-border bg-white p-4 shadow-[0_12px_40px_rgba(31,35,80,0.06)] sm:p-5">
+    <section className="rounded-md border border-border bg-white p-4 shadow-[0_12px_40px_rgba(31,35,80,0.06)] sm:p-5">
       <div className="flex items-center justify-between gap-3">
-        <div className="flex min-w-0 items-center gap-3">
+        <div className="flex min-w-0 items-center gap-2 sm:gap-3">
           <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#4f46e5] text-sm font-bold text-white">
             {memberInitials(member.name)}
           </div>
@@ -97,7 +97,7 @@ export default function MemberInfo({
         </strong>
       </div>
 
-      <div className="mt-5 rounded-2xl bg-[#f6f7ff] p-4">
+      <div className="mt-5 rounded-md bg-[#f6f7ff] p-4">
         <div className="mb-2 flex items-center justify-between text-sm">
           <span className="font-medium text-muted">Collection Realization</span>
           <span className="font-semibold text-emerald-600">

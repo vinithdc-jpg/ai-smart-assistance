@@ -7,11 +7,11 @@ import {
   Plus,
   Search,
   Trash2,
-  Users,
   X,
 } from "lucide-react";
 import type { ApiMember } from "@/lib/membersApi";
 import { useDebounce } from "@/components/hooks/useDebounce";
+import PageNavigation from "@/components/ui/PageNavigation";
 
 interface MemberSearchProps {
   members: ApiMember[];
@@ -81,23 +81,16 @@ export default function MemberSearch({
   }, [members, query]);
 
   return (
-    <div className="flex w-full min-w-0 flex-wrap items-center gap-x-4 gap-y-3 sm:flex-nowrap sm:gap-x-5">
-      <div className="flex shrink-0 items-center gap-2.5 text-sm font-medium text-foreground">
-        <span className="flex h-9 w-9 items-center justify-center rounded-full bg-primary-soft text-primary">
-          <Users className="h-4 w-4" />
-        </span>
-        <span className="whitespace-nowrap">Active Member</span>
-      </div>
-
+    <div className="flex w-full min-w-0 flex-wrap items-center gap-3 sm:flex-nowrap sm:gap-5">
       <div
         ref={rootRef}
-        className="relative order-3 min-w-0 w-full sm:order-0 sm:flex-1"
+        className="relative min-w-0 w-full flex-1"
       >
-        <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-primary" />
+        <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
         <input
           id="member-search"
           type="text"
-          placeholder="Search members by name, ID, email, or phone..."
+          placeholder="Search"
           value={
             open ? query : selectedMember ? memberLabel(selectedMember) : query
           }
@@ -119,7 +112,7 @@ export default function MemberSearch({
           }}
           aria-label="Search members by name, ID, email, or phone"
           aria-controls="member-search-results"
-          className="h-12 w-full rounded-xl border border-border bg-background pl-11 pr-19 text-sm text-foreground outline-none transition-colors placeholder:text-muted hover:border-primary/40 hover:bg-accent/30 focus:border-primary focus:bg-card focus:ring-2 focus:ring-ring/30"
+          className="member-search-input h-11 w-full rounded-md border border-border bg-background pl-11 pr-19 text-sm text-foreground shadow-sm outline-none transition-colors placeholder:text-muted-foreground hover:border-primary/40 focus:border-primary/70 focus:ring-4 focus:ring-ring/20 focus-visible:outline-none"
         />
         {open && query ? (
           <button
@@ -147,7 +140,7 @@ export default function MemberSearch({
         {open ? (
           <div
             id="member-search-results"
-            className="absolute left-0 z-50 mt-2 w-full overflow-hidden rounded-2xl border border-border bg-popover text-popover-foreground shadow-lg"
+            className="absolute left-0 z-50 mt-2 w-full overflow-hidden rounded-md border border-border bg-popover text-popover-foreground shadow-lg"
           >
             <div className="max-h-[min(60vh,18rem)] overflow-y-auto py-1 lg:max-h-72">
               {loading ? (
@@ -209,26 +202,13 @@ export default function MemberSearch({
               )}
             </div>
             {totalPages > 1 ? (
-              <div className="flex items-center justify-between border-t border-border px-3 py-2 text-xs text-muted">
-                <button
-                  type="button"
-                  disabled={page === 1}
-                  onClick={() => onPageChange?.(page - 1)}
-                  className="rounded-full px-2 py-1 transition hover:bg-accent disabled:opacity-40"
-                >
-                  Prev
-                </button>
-                <span>
-                  Page {page} of {totalPages}
-                </span>
-                <button
-                  type="button"
-                  disabled={page === totalPages}
-                  onClick={() => onPageChange?.(page + 1)}
-                  className="rounded-full px-2 py-1 transition hover:bg-accent disabled:opacity-40"
-                >
-                  Next
-                </button>
+              <div className="flex justify-center border-t border-border px-2 py-2">
+                <PageNavigation
+                  page={page}
+                  totalPages={totalPages}
+                  onPageChange={(nextPage) => onPageChange?.(nextPage)}
+                  label="member search results"
+                />
               </div>
             ) : null}
           </div>
@@ -238,7 +218,7 @@ export default function MemberSearch({
       <button
         type="button"
         onClick={onAdd}
-        className="order-2 ml-auto inline-flex h-11 shrink-0 items-center justify-center gap-2 rounded-xl border border-primary/25 bg-primary-soft px-3.5 text-sm font-semibold text-primary transition-colors hover:border-primary/45 hover:bg-primary/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-card sm:order-0 sm:ml-0 sm:px-4"
+        className="inline-flex h-11 w-full shrink-0 items-center justify-center gap-2 rounded-md border border-primary/25 bg-primary-soft px-3.5 text-sm font-semibold text-primary transition-colors hover:border-primary/45 hover:bg-primary/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-card sm:ml-0 sm:w-auto sm:px-4"
         title="Add member"
       >
         <Plus className="h-4 w-4" />

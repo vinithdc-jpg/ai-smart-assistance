@@ -76,8 +76,8 @@ export function MembersOverview({
         </div>
 
         <div className="flex items-center gap-2">
-          <div className="relative w-full md:w-64">
-            <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted" />
+          <div className="relative w-full md:w-80">
+            <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <input
               id="memberClubFilter"
               type="search"
@@ -85,7 +85,7 @@ export function MembersOverview({
               onChange={(event) => onFilterChange(event.target.value)}
               placeholder="Search club name or ID"
               aria-label="Search members by club name or ID"
-              className="h-10 w-full rounded-xl border border-border bg-background pl-9 pr-3 text-sm text-foreground outline-none focus:border-primary focus:ring-4 focus:ring-ring/40"
+              className="member-search-input h-11 w-full rounded-md border border-border bg-background pl-11 pr-3 text-sm text-foreground shadow-sm outline-none transition-colors placeholder:text-muted-foreground hover:border-primary/40 focus:border-primary/70 focus:ring-4 focus:ring-ring/20 focus-visible:outline-none"
             />
           </div>
         </div>

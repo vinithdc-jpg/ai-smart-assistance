@@ -45,13 +45,13 @@ export default function StaffAudit({
 
         <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:items-center">
           {/* Search Input Container */}
-          <div className="flex h-10 w-full items-center gap-2 rounded-lg border border-border bg-background px-3 sm:w-52">
+          <div className="flex h-12 w-full items-center gap-2 rounded-md border border-border bg-background px-3 sm:w-52">
             <Search size={15} className="text-muted-foreground shrink-0" />
             <input
               placeholder="Search staff..."
               value={search}
               onChange={(event) => onSearchChange(event.target.value)}
-              className="min-w-0 flex-1 bg-transparent text-xs text-foreground outline-none placeholder:text-muted-foreground"
+              className="member-search-input h-full min-w-0 flex-1 border-0 bg-transparent px-0 text-sm text-foreground outline-none placeholder:text-muted-foreground"
             />
           </div>
 
@@ -63,7 +63,7 @@ export default function StaffAudit({
             id="staff-report-status"
             value={status}
             onChange={(event) => onStatusChange(event.target.value)}
-            className="h-10 w-full rounded-md border-border bg-background px-3 text-xs text-foreground sm:w-40"
+            className="!h-12 !rounded-md w-full border-border bg-background px-3 text-xs text-foreground sm:w-40"
           >
             <option value="all">All staff</option>
             <option value="active">Active</option>

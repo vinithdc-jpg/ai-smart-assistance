@@ -31,9 +31,11 @@ export default function Logout({ onLogout, compact = false, compactOnMobile = fa
         onClick={() => setIsConfirmOpen(true)}
         aria-label={compactOnMobile ? "Logout" : undefined}
         title="Logout"
-        className={compactOnMobile || compact
-          ? "inline-flex h-9 w-9 items-center justify-center rounded-full border border-border bg-white text-muted shadow-sm transition-all hover:bg-primary-soft hover:text-primary sm:h-9 sm:w-auto sm:gap-2 sm:px-3.5 sm:text-xs sm:font-medium sm:hover:text-foreground"
-          : "inline-flex h-9 items-center justify-center gap-2 rounded-full border border-border bg-white px-3.5 text-xs font-medium text-muted shadow-sm transition-all hover:bg-primary-soft hover:text-foreground"}
+        className={compactOnMobile
+          ? "inline-flex h-10 w-10 items-center justify-center rounded-md border border-border bg-white text-muted shadow-sm transition-all hover:bg-primary-soft hover:text-primary sm:h-10 sm:w-auto sm:gap-2 sm:px-3.5 sm:text-xs sm:font-medium sm:hover:text-foreground"
+          : compact
+            ? "inline-flex h-10 w-10 items-center justify-center rounded-md border border-border bg-white text-muted shadow-sm transition-all hover:bg-primary-soft hover:text-primary sm:h-10 sm:w-auto sm:gap-2 sm:px-3.5 sm:text-xs sm:font-medium sm:hover:text-foreground"
+            : "inline-flex h-9 items-center justify-center gap-2 rounded-full border border-border bg-white px-3.5 text-xs font-medium text-muted shadow-sm transition-all hover:bg-primary-soft hover:text-foreground"}
       >
         <LogOut className="h-3.5 w-3.5" />
         {compact ? null : <span className={compactOnMobile ? "hidden sm:inline" : undefined}>Logout</span>}

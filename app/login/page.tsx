@@ -283,7 +283,7 @@ function LoginDashboardPreview() {
             Illustrative dashboard preview
           </p>
         </div>
-        <span className="rounded-full border border-white/10 bg-white/[0.06] px-2 py-1 text-[9px] font-medium text-blue-100/70">
+        <span className="rounded-full border border-white/10 bg-white/6 px-2 py-1 text-[9px] font-medium text-blue-100/70">
           DEMO DATA
         </span>
       </div>
@@ -319,7 +319,7 @@ function LoginDashboardPreview() {
       </div>
 
       <div className="mt-2 grid grid-cols-[1.15fr_0.85fr] gap-2">
-        <div className="rounded-xl border border-white/10 bg-white/[0.05] p-2.5 sm:p-3">
+        <div className="rounded-xl border border-white/10 bg-white/5 p-2.5 sm:p-3">
           <div className="flex items-center justify-between gap-1">
             <span className="text-[9px] font-medium text-blue-50/85 sm:text-[10px]">
               Payment activity
@@ -358,7 +358,7 @@ function LoginDashboardPreview() {
           </div>
         </div>
 
-        <div className="flex flex-col justify-between rounded-xl border border-white/10 bg-white/[0.05] p-2.5 sm:p-3">
+        <div className="flex flex-col justify-between rounded-xl border border-white/10 bg-white/5 p-2.5 sm:p-3">
           <div>
             <p className="text-[9px] font-medium text-blue-50/85 sm:text-[10px]">
               Recent transaction
@@ -375,7 +375,7 @@ function LoginDashboardPreview() {
         </div>
       </div>
 
-      <div className="mt-2 flex items-center gap-2 rounded-xl border border-violet-200/15 bg-violet-300/[0.08] px-2.5 py-2 sm:px-3">
+      <div className="mt-2 flex items-center gap-2 rounded-xl border border-violet-200/15 bg-violet-300/8 px-2.5 py-2 sm:px-3">
         <span className="flex size-7 shrink-0 items-center justify-center rounded-lg bg-violet-300/15 text-violet-100">
           <Sparkles className="size-3.5" aria-hidden="true" />
         </span>

@@ -51,10 +51,10 @@ export default function PaymentSummary({
       {cards.map((card) => (
         <div
           key={card.label}
-          className="flex min-h-[96px] flex-col rounded-[20px] border border-border bg-white p-3 shadow-[0_10px_30px_rgba(31,35,80,0.05)] sm:min-h-[118px] sm:p-4"
+          className="flex min-h-[96px] min-w-0 flex-col rounded-md border border-border bg-white p-3 shadow-[0_10px_30px_rgba(31,35,80,0.05)] sm:min-h-[118px] sm:p-4"
         >
           <div className="flex items-center justify-between gap-2">
-            <span className="text-[11px] font-bold uppercase tracking-[0.12em] text-muted">
+            <span className="min-w-0 truncate text-[11px] font-bold uppercase tracking-[0.12em] text-muted">
               {card.label}
             </span>
             <span className={`rounded-lg p-1.5 ${card.iconClass}`}>{card.icon}</span>

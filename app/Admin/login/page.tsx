@@ -166,23 +166,7 @@ export default function AdminLoginPage() {
               Login as Staff
             </Link>
           </form>
-          <div className="mt-6 grid grid-cols-3 border-t border-border pt-4 text-[9px] font-medium text-muted">
-            <span>
-              Compliance
-              <br />
-              Audit
-            </span>
-            <span className="text-center">
-              System
-              <br />
-              Telemetry
-            </span>
-            <span className="text-right">
-              Security
-              <br />
-              Desk
-            </span>
-          </div>
+          
         </div>
       </div>
     </main>

@@ -1,9 +1,8 @@
 const API_URL =
   process.env.NEXT_PUBLIC_API_URL ||
-  "https://smart-leger-server.onrender.com/api";
+  "http://localhost:5000/api";
 
-interface RequestOptions
-  extends RequestInit {
+interface RequestOptions extends RequestInit {
   body?: BodyInit | null;
 }
 
@@ -11,7 +10,7 @@ const inFlightGetRequests = new Map<string, Promise<unknown>>();
 
 async function apiRequest<T>(
   endpoint: string,
-  options: RequestOptions = {}
+  options: RequestOptions = {},
 ): Promise<T> {
   const method = (options.method || "GET").toUpperCase();
   const requestKey =
@@ -42,22 +41,24 @@ async function apiRequest<T>(
         credentials: "include",
       });
     } catch {
-      throw new Error(
-        "Unable to connect to the server. Please try again."
-      );
+      throw new Error("Unable to connect to the server. Please try again.");
     }
 
     const responseText = await response.text();
     let data: { message?: string } & T;
 
     try {
-      data = responseText ? JSON.parse(responseText) : ({} as { message?: string } & T);
+      data = responseText
+        ? JSON.parse(responseText)
+        : ({} as { message?: string } & T);
     } catch {
       throw new Error("The server returned an invalid response.");
     }
 
     if (!response.ok) {
-      const error = new Error(data.message || "Something went wrong") as Error & {
+      const error = new Error(
+        data.message || "Something went wrong",
+      ) as Error & {
         status?: number;
       };
       error.status = response.status;

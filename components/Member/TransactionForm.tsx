@@ -158,7 +158,7 @@ export default function TransactionForm({
             name="paymentMethod"
             value={form.paymentMethod}
             onChange={onChange}
-            className={fieldClass}
+            className="h-11"
           >
             <option value="cash">Cash Deposit</option>
             <option value="upi">UPI</option>
@@ -173,7 +173,7 @@ export default function TransactionForm({
             value={form.transactionType}
             onChange={onChange}
             disabled={Boolean(editingTransaction)}
-            className={fieldClass}
+            className="h-11"
           >
             <option value="membership">Membership Subscription</option>
             <option value="amc">AMC</option>

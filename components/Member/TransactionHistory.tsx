@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import { Pencil, Search, Trash2 } from "lucide-react";
 import type { Transaction } from "@/types/member";
 import { formatCurrency, formatMoney } from "./money";
+import PageNavigation from "@/components/ui/PageNavigation";
 
 interface TransactionHistoryProps {
   transactions: Transaction[];
@@ -72,7 +73,7 @@ export default function TransactionHistory({
   return (
     <section
       id="ledger-entries"
-      className="min-w-0 w-full rounded-3xl border border-border bg-white p-4 shadow-[0_12px_40px_rgba(31,35,80,0.06)] sm:p-5"
+      className="min-w-0 w-full rounded-md border border-border bg-white p-3 shadow-[0_12px_40px_rgba(31,35,80,0.06)] sm:p-5"
     >
       <div className="mb-4 flex flex-col gap-3 xl:flex-row xl:items-center xl:justify-between">
         <div className="flex h-10 items-center gap-1 overflow-x-auto rounded-full bg-[#f4f5ff] p-1 text-sm">
@@ -107,7 +108,7 @@ export default function TransactionHistory({
           ))}
         </div>
         <div className="relative w-full shrink-0 xl:w-64">
-          <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted" />
+          <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <input
             value={query}
             onChange={(event) => {
@@ -115,7 +116,8 @@ export default function TransactionHistory({
               setPage(1);
             }}
             placeholder="Search slip or amt..."
-            className="h-10 w-full rounded-xl border border-border bg-[#f7f8ff] pl-9 pr-3 text-sm outline-none focus:border-primary focus:bg-white"
+            aria-label="Search transactions by slip number, amount, or date"
+            className="member-search-input h-11 w-full rounded-md border border-border bg-background pl-9 pr-3 text-sm text-foreground shadow-sm outline-none transition-colors placeholder:text-muted-foreground hover:border-primary/40 focus:border-primary/70 focus:ring-4 focus:ring-ring/20 focus-visible:outline-none"
           />
         </div>
       </div>
@@ -248,7 +250,7 @@ export default function TransactionHistory({
         {pageRows.map((transaction) => (
           <article
             key={transaction.id}
-            className="rounded-2xl border border-border bg-[#f7f8ff] p-3"
+            className="rounded-md border border-border bg-[#f7f8ff] p-3"
           >
             <div className="flex items-start justify-between gap-2">
               <div>
@@ -324,7 +326,7 @@ export default function TransactionHistory({
           </article>
         ))}
         {filtered.length > 0 ? (
-          <div className="rounded-2xl border border-border bg-[#f6f7ff] p-3 text-sm">
+          <div className="rounded-md border border-border bg-[#f6f7ff] p-3 text-sm">
             <p className="font-semibold">
               Ledger Summary ({filtered.length} Vouchers)
             </p>
@@ -360,27 +362,12 @@ export default function TransactionHistory({
               • Page {currentPage}/{totalPages}
             </span>
           </p>
-          <div className="flex items-center justify-between gap-2 sm:justify-start">
-            <button
-              type="button"
-              disabled={currentPage === 1}
-              onClick={() => setPage((value) => value - 1)}
-              className="rounded-lg px-3 py-1.5 disabled:opacity-40"
-            >
-              Previous
-            </button>
-            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-white">
-              {currentPage}
-            </span>
-            <button
-              type="button"
-              disabled={currentPage === totalPages}
-              onClick={() => setPage((value) => value + 1)}
-              className="rounded-lg px-3 py-1.5 disabled:opacity-40"
-            >
-              Next
-            </button>
-          </div>
+          <PageNavigation
+            page={currentPage}
+            totalPages={totalPages}
+            onPageChange={setPage}
+            label="transactions"
+          />
         </div>
       )}
     </section>

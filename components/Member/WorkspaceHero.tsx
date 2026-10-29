@@ -33,7 +33,7 @@ export default function WorkspaceHero({
         <button
           type="button"
           onClick={onRecordPayment}
-          className="inline-flex h-11 w-full min-w-0 items-center justify-center gap-2 rounded-2xl bg-primary px-3 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-primary-hover sm:w-auto sm:px-4"
+          className="inline-flex h-11 w-full min-w-0 items-center justify-center gap-2 rounded-md bg-primary px-3 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-primary-hover sm:w-auto sm:px-4"
         >
           <Plus className="h-4 w-4 shrink-0" />
           <span>Record payment</span>
@@ -41,7 +41,7 @@ export default function WorkspaceHero({
         <button
           type="button"
           onClick={onExport}
-          className="inline-flex h-11 w-full min-w-0 items-center justify-center gap-2 rounded-2xl border border-border bg-white px-3 text-sm font-semibold text-foreground shadow-sm hover:bg-primary-soft sm:w-auto sm:px-4"
+          className="inline-flex h-11 w-full min-w-0 items-center justify-center gap-2 rounded-md border border-border bg-white px-3 text-sm font-semibold text-foreground shadow-sm hover:bg-primary-soft sm:w-auto sm:px-4"
         >
           <FileSpreadsheet className="h-4 w-4 shrink-0" />
           <span className="truncate">Export</span>
@@ -50,7 +50,7 @@ export default function WorkspaceHero({
         <button
           type="button"
           onClick={onAiInsights}
-          className="inline-flex h-11 w-full min-w-0 items-center justify-center gap-2 rounded-2xl bg-[#ecebff] px-3 text-sm font-semibold text-primary hover:bg-[#ddd9ff] sm:w-auto sm:px-4"
+          className="inline-flex h-11 w-full min-w-0 items-center justify-center gap-2 rounded-md bg-[#ecebff] px-3 text-sm font-semibold text-primary hover:bg-[#ddd9ff] min-[375px]:col-span-2 sm:w-auto sm:px-4"
         >
           <Sparkles className="h-4 w-4 shrink-0" />
           AI Insights

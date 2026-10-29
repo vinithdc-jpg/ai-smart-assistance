@@ -137,6 +137,7 @@ export default function MemberPaymentSummary() {
   const [aiSummary, setAiSummary] = useState("");
   const [aiSummaryLoading, setAiSummaryLoading] = useState(false);
   const [aiSummaryError, setAiSummaryError] = useState("");
+  const [showAiSummary, setShowAiSummary] = useState(false);
   const [error, setError] = useState("");
   const [formError, setFormError] = useState("");
   const [formLoading, setFormLoading] = useState(false);
@@ -625,6 +626,7 @@ export default function MemberPaymentSummary() {
   async function handleGenerateAiSummary() {
     if (!selectedMember) return;
     setAiSummaryLoading(true);
+    setAiSummary("");
     setAiSummaryError("");
     try {
       const response = await generateTransactionSummary(selectedMember.id);
@@ -638,6 +640,12 @@ export default function MemberPaymentSummary() {
     } finally {
       setAiSummaryLoading(false);
     }
+  }
+
+  function openAiSummary() {
+    if (!selectedMember) return;
+    setShowAiSummary(true);
+    void handleGenerateAiSummary();
   }
 
   async function handleLogout() {
@@ -721,15 +729,11 @@ export default function MemberPaymentSummary() {
             gstRate={gstRate}
             clubId={clubId}
             onExport={exportStatement}
-            onAiInsights={() => {
-              document.getElementById("ai-insights")?.scrollIntoView({
-                behavior: "smooth",
-              });
-            }}
+            onAiInsights={openAiSummary}
             onRecordPayment={openCreateTransactionForm}
           />
 
-          <div className="relative z-20 min-h-[88px] rounded-2xl border border-border bg-card px-4 py-4 sm:rounded-3xl sm:px-5">
+          <div className="relative z-20 min-h-[88px] rounded-md border border-border bg-card px-3 py-3 sm:px-5 sm:py-4">
             <MemberSearch
               members={members}
               selectedMember={selectedApiMember}
@@ -773,7 +777,7 @@ export default function MemberPaymentSummary() {
           ) : null}
 
           {error ? (
-            <p className="rounded-2xl border border-red-200 bg-red-50 p-3 text-xs font-medium text-red-600">
+            <p className="rounded-md border border-red-200 bg-red-50 p-3 text-xs font-medium text-red-600">
               {error}
             </p>
           ) : null}
@@ -782,8 +786,8 @@ export default function MemberPaymentSummary() {
             <MemberSummarySkeleton />
           ) : selectedMember ? (
             <>
-              <div className="grid items-start gap-4 xl:grid-cols-[minmax(320px,380px)_minmax(0,1fr)] xl:gap-6">
-                <div className="xl:col-start-1">
+              <div className="grid min-w-0 items-start gap-4 xl:grid-cols-[minmax(320px,380px)_minmax(0,1fr)] xl:gap-6">
+                <div className="min-w-0 xl:col-start-1">
                   <MemberInfo
                     member={selectedMember}
                     onEdit={() =>
@@ -798,7 +802,7 @@ export default function MemberPaymentSummary() {
                     }
                   />
                 </div>
-                <div className="xl:col-start-1">
+                <div className="min-w-0 xl:col-start-1">
                   <PaymentSummary
                     member={selectedMember}
                     transactionCount={memberTransactions.length}
@@ -847,17 +851,18 @@ export default function MemberPaymentSummary() {
                     onDelete={handleDeleteTransaction}
                   />
                 </div>
-                <div className="xl:col-start-1">
-                  <AiInsightsPanel
-                    loading={aiSummaryLoading}
-                    error={aiSummaryError}
-                    summary={aiSummary}
-                    onGenerate={() => void handleGenerateAiSummary()}
-                  />
-                </div>
               </div>
             </>
           ) : null}
+          <AiInsightsPanel
+            isOpen={showAiSummary && Boolean(selectedMember)}
+            memberName={selectedMember?.name ?? ""}
+            loading={aiSummaryLoading}
+            error={aiSummaryError}
+            summary={aiSummary}
+            onClose={() => setShowAiSummary(false)}
+            onGenerate={() => void handleGenerateAiSummary()}
+          />
         </main>
         <footer className="border-t border-border bg-white/80 px-4 py-4 sm:px-6 lg:px-8">
           <div className="mx-auto flex max-w-7xl flex-col gap-2 text-xs text-muted sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">

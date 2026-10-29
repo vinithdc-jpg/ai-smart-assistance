@@ -204,7 +204,7 @@ export default function MemberForm({
             name="amcStatus"
             value={form.amcStatus}
             onChange={onChange}
-            className={baseInput}
+            className="h-11"
           >
             <option value="active">Active</option>
             <option value="inactive">Inactive</option>

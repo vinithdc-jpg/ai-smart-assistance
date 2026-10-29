@@ -7,9 +7,11 @@ import React, {
   Children,
   isValidElement,
   ReactNode,
+  type CSSProperties,
 } from "react";
 import { ChevronsUpDown, Check } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { createPortal } from "react-dom";
 
 type SelectProps = {
   id?: string;
@@ -40,6 +42,9 @@ export default function Select({
 }: SelectProps) {
   const [open, setOpen] = useState(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const [dropdownStyle, setDropdownStyle] = useState<CSSProperties>();
 
   const options = Children.toArray(children)
     .flatMap((child): React.ReactElement<SelectOptionProps>[] => {
@@ -69,7 +74,8 @@ export default function Select({
     const handleClickOutside = (event: MouseEvent) => {
       if (
         wrapperRef.current &&
-        !wrapperRef.current.contains(event.target as Node)
+        !wrapperRef.current.contains(event.target as Node) &&
+        !dropdownRef.current?.contains(event.target as Node)
       ) {
         setOpen(false);
       }
@@ -81,6 +87,43 @@ export default function Select({
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+
+  useEffect(() => {
+    if (!open) return;
+
+    const updateDropdownPosition = () => {
+      const trigger = triggerRef.current;
+      if (!trigger) return;
+
+      const bounds = trigger.getBoundingClientRect();
+      const spaceBelow = window.innerHeight - bounds.bottom - 8;
+      const spaceAbove = bounds.top - 8;
+      const placeBelow = spaceBelow >= 160 || spaceBelow >= spaceAbove;
+      const availableSpace = Math.max(
+        0,
+        Math.min(256, placeBelow ? spaceBelow : spaceAbove),
+      );
+
+      setDropdownStyle({
+        position: "fixed",
+        left: bounds.left,
+        width: bounds.width,
+        maxHeight: availableSpace,
+        ...(placeBelow
+          ? { top: bounds.bottom + 8 }
+          : { bottom: window.innerHeight - bounds.top + 8 }),
+      });
+    };
+
+    updateDropdownPosition();
+    window.addEventListener("resize", updateDropdownPosition);
+    window.addEventListener("scroll", updateDropdownPosition, true);
+
+    return () => {
+      window.removeEventListener("resize", updateDropdownPosition);
+      window.removeEventListener("scroll", updateDropdownPosition, true);
+    };
+  }, [open]);
 
   const handleSelect = (optionValue: string) => {
     onChange?.({
@@ -100,46 +143,55 @@ export default function Select({
 
       {/* Trigger */}
       <button
+        ref={triggerRef}
         type="button"
         disabled={disabled}
+        aria-haspopup="listbox"
+        aria-expanded={open}
         onClick={() => setOpen((prev) => !prev)}
         className={cn(
           className,
-          "form-field-trigger flex h-10 w-full items-center justify-between rounded-xl border border-[#333] bg-[#1b1b1b] px-3.5 text-sm text-[#f5f5f5] outline-none transition-colors hover:border-[#484848] focus-visible:border-[#555] focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-60 dark:border-[#333] dark:bg-[#1b1b1b] dark:text-[#f5f5f5]",
+          "form-field-trigger flex h-10 w-full items-center justify-between rounded-xl border border-border bg-background px-3.5 text-sm text-foreground outline-none transition-colors hover:border-primary/40 focus-visible:border-primary focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-60",
         )}
       >
-        <span className={selectedOption ? "" : "text-[#a1a1a1]"}>
+        <span className={selectedOption ? "" : "text-muted-foreground"}>
           {selectedOption?.label ?? placeholder}
         </span>
 
-        <ChevronsUpDown size={16} className="shrink-0 text-[#c4c4c4]" />
+        <ChevronsUpDown size={16} className="shrink-0 text-muted-foreground" />
       </button>
 
       {/* Custom Dropdown */}
-      {open && !disabled && (
-        <div
-          className="
-            absolute left-0 right-0 z-9999
-            mt-2
-            max-h-64
+      {open &&
+        !disabled &&
+        dropdownStyle &&
+        createPortal(
+          <div
+            ref={dropdownRef}
+            role="listbox"
+            className="
+            z-[9999]
             overflow-y-auto
             rounded-xl
-            border border-[#303030]
-            bg-[#1c1c1c]
+            border border-border
+            bg-popover text-popover-foreground
             p-1.5
-            shadow-[0_16px_36px_rgba(0,0,0,0.45)]
+            shadow-lg
           "
-        >
-          {options.map((option) => {
-            const selected = String(value) === option.value;
+            style={dropdownStyle}
+          >
+            {options.map((option) => {
+              const selected = String(value) === option.value;
 
-            return (
-              <button
-                key={option.value}
-                type="button"
-                disabled={option.disabled}
-                onClick={() => handleSelect(option.value)}
-                className={`
+              return (
+                <button
+                  key={option.value}
+                  type="button"
+                  role="option"
+                  aria-selected={selected}
+                  disabled={option.disabled}
+                  onClick={() => handleSelect(option.value)}
+                  className={`
                   flex w-full items-center justify-start gap-3
                   rounded-lg
                   px-2.5 py-1.5
@@ -147,8 +199,8 @@ export default function Select({
                   transition-colors
                   ${
                     selected
-                      ? "font-semibold text-[#f5f5f5]"
-                      : "text-[#e5e5e5] hover:bg-[#2a2a2a]"
+                      ? "bg-primary-soft font-semibold text-primary"
+                      : "text-popover-foreground hover:bg-accent hover:text-accent-foreground"
                   }
                   ${
                     option.disabled
@@ -156,17 +208,20 @@ export default function Select({
                       : "cursor-pointer"
                   }
                 `}
-              >
-                <Check
-                  size={16}
-                  className={`shrink-0 ${selected ? "opacity-100" : "opacity-0"}`}
-                />
-                <span>{option.label}</span>
-              </button>
-            );
-          })}
-        </div>
-      )}
+                >
+                  <Check
+                    size={16}
+                    className={`h-4 w-4 shrink-0 ${selected ? "opacity-100" : "opacity-0"}`}
+                  />
+                  <span className="min-w-0 flex-1 text-left">
+                    {option.label}
+                  </span>
+                </button>
+              );
+            })}
+          </div>,
+          document.body,
+        )}
     </div>
   );
 }

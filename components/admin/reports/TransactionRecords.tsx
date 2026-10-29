@@ -79,21 +79,21 @@ export default function TransactionRecords({
       </div>
 
       <div className="mt-5 grid grid-cols-1 gap-2 sm:grid-cols-2 xl:grid-cols-5">
-        <div className="flex items-center gap-2 rounded-lg border border-slate-200 px-3 py-2 md:col-span-2">
-          <Search size={15} className="text-slate-400" />
+        <div className="flex h-12 min-w-0 items-center gap-2 rounded-md border border-border bg-background px-3 md:col-span-2">
+          <Search size={15} className="shrink-0 text-muted-foreground" />
 
           <input
             placeholder="Search transactions by the name..."
             value={search}
             onChange={(event) => onSearchChange(event.target.value)}
-            className="w-full text-xs outline-none placeholder:text-slate-400"
+            className="member-search-input h-full min-w-0 flex-1 border-0 bg-transparent px-0 text-sm text-foreground outline-none placeholder:text-muted-foreground"
           />
         </div>
 
         <Select
           value={filters.type || "all"}
           onChange={(event) => onFilterChange("type", event.target.value)}
-          className="h-10 rounded-lg px-3 text-xs"
+          className="!h-12 !rounded-md px-3 text-xs"
         >
           <option value="all">All Types</option>
           <option value="membership">Membership</option>
@@ -104,7 +104,7 @@ export default function TransactionRecords({
         <Select
           value={filters.status || "all"}
           onChange={(event) => onFilterChange("status", event.target.value)}
-          className="h-10 rounded-lg px-3 text-xs"
+          className="!h-12 !rounded-md px-3 text-xs"
         >
           <option value="all">All Status</option>
           <option value="completed">Completed</option>
@@ -115,7 +115,7 @@ export default function TransactionRecords({
         <Select
           value={filters.staffId || "all"}
           onChange={(event) => onFilterChange("staffId", event.target.value)}
-          className="h-10 rounded-lg px-3 text-xs"
+          className="!h-12 !rounded-md px-3 text-xs"
         >
           <option value="all">All Staff</option>
           {staffOptions.map((staff) => (

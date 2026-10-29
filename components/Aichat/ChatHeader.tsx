@@ -34,7 +34,7 @@ export default function ChatHeader({
               type="button"
               onClick={onNewChat}
               aria-label="Start new conversation"
-              className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-border bg-card/80 text-xs font-medium text-foreground/80 shadow-sm transition-all hover:border-primary/40 hover:bg-primary-soft hover:text-primary active:scale-[0.98] sm:w-auto sm:gap-1.5 sm:px-3.5"
+              className="inline-flex h-10 w-10 items-center justify-center rounded-md border border-border bg-card/80 text-xs font-medium text-foreground/80 shadow-sm transition-all hover:border-primary/40 hover:bg-primary-soft hover:text-primary active:scale-[0.98] sm:w-auto sm:gap-1.5 sm:px-3.5"
             >
               <svg
                 className="h-4 w-4 text-muted sm:h-3.5 sm:w-3.5"
@@ -54,7 +54,7 @@ export default function ChatHeader({
           )}
 
           <Link href="/Member" aria-label={ButtonName} title={ButtonName}>
-            <span className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-primary-soft text-primary transition-colors hover:bg-primary hover:text-white sm:hidden">
+            <span className="inline-flex h-10 w-10 items-center justify-center rounded-md bg-primary-soft text-primary transition-colors hover:bg-primary hover:text-white sm:hidden">
               <UserRound aria-hidden="true" className="h-4 w-4" />
             </span>
             <span className="hidden sm:inline-flex">

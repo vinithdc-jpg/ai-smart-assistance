@@ -44,16 +44,20 @@ export default function ReportsHeader({
           <label className="sr-only" htmlFor="report-export-format">
             Export format
           </label>
-          <Select
-            id="report-export-format"
-            value={format}
-            onChange={(event) => setFormat(event.target.value as typeof format)}
-            className="h-10 w-full rounded-lg border-border bg-background px-3 text-sm text-foreground dark:bg-card"
-          >
-            <option value="csv">CSV</option>
-            <option value="xlsx">Excel</option>
-            <option value="pdf">PDF</option>
-          </Select>
+          <div className="w-full sm:w-36 sm:shrink-0">
+            <Select
+              id="report-export-format"
+              value={format}
+              onChange={(event) =>
+                setFormat(event.target.value as typeof format)
+              }
+              className="h-10 rounded-lg"
+            >
+              <option value="csv">CSV</option>
+              <option value="xlsx">Excel</option>
+              <option value="pdf">PDF</option>
+            </Select>
+          </div>
           <button
             type="button"
             disabled={exporting}
