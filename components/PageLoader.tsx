@@ -1,3 +1,5 @@
+import { BrainCircuit } from "lucide-react";
+
 interface PageLoaderProps {
   label?: string;
   overlay?: boolean;
@@ -18,14 +20,17 @@ export default function PageLoader({
       aria-label={label}
     >
       <div className="flex flex-col items-center gap-3">
-        {/* Spinner */}
-        <div className="relative h-10 w-10">
-          <div className="absolute inset-0 rounded-full border-[3px] border-blue-100" />
-
-          <div className="absolute inset-0 animate-spin rounded-full border-[3px] border-transparent border-t-blue-600" />
+        <div className="ai-loader" aria-hidden="true">
+          <div className="ai-loader__orbit ai-loader__orbit--outer">
+            <span className="ai-loader__satellite ai-loader__satellite--blue" />
+          </div>
+          <div className="ai-loader__orbit ai-loader__orbit--inner">
+            <span className="ai-loader__satellite ai-loader__satellite--cyan" />
+          </div>
+          <div className="ai-loader__core">
+            <BrainCircuit className="h-8 w-8" strokeWidth={1.7} />
+          </div>
         </div>
-
-        {/* Loading text */}
         <p className="text-sm font-medium text-slate-500">{label}...</p>
       </div>
     </div>

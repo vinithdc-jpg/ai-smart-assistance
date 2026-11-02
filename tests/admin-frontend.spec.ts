@@ -143,6 +143,21 @@ test.describe("Admin frontend", () => {
     await page.goto("/Admin/dashboard");
 
     await expect(page).toHaveURL(/\/Admin\/login\?from=/);
+    await expect(page.getByText("Total Clubs")).toHaveCount(0);
+    await expect(
+      page.getByRole("heading", { name: "Welcome back, Administrator" }),
+    ).toBeVisible();
+  });
+
+  test("redirects forbidden admin sessions to login without rendering the dashboard", async ({
+    page,
+  }) => {
+    await mockAdminApi(page, true, 403);
+
+    await page.goto("/Admin/dashboard");
+
+    await expect(page).toHaveURL(/\/Admin\/login\?from=/);
+    await expect(page.getByText("Total Clubs")).toHaveCount(0);
     await expect(
       page.getByRole("heading", { name: "Welcome back, Administrator" }),
     ).toBeVisible();

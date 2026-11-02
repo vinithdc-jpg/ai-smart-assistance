@@ -66,24 +66,6 @@ export interface MemberSummaryResponse {
       balanceAmount: number | string;
       transactionCount: number;
     };
-    transactions: Array<{
-      id: string;
-      amount_taken_date: string;
-      slip_no: string | null;
-      invoice_no?: string | null;
-      debit_amount: number | string;
-      received_amount: number | string;
-      balance_amount: number | string;
-      payment_status: string | null;
-      amount_excluding_gst?: number | string | null;
-      cgst_amount?: number | string | null;
-      sgst_amount?: number | string | null;
-      total_gst_amount?: number | string | null;
-      total_amount_with_gst?: number | string | null;
-      types?: string | null;
-      payment_method?: string | null;
-      remarks?: string | null;
-    }>;
   };
 }
 

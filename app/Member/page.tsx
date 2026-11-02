@@ -39,7 +39,9 @@ import {
 import {
   createTransaction,
   deleteTransaction,
+  getTransactions,
   updateTransaction,
+  type ApiTransaction,
 } from "@/lib/transactionsApi";
 import { getGstRate } from "@/lib/settingsApi";
 import ConfirmModal from "@/components/ui/ConfirmModal";
@@ -98,6 +100,40 @@ function mapPaymentStatus(
   return "Completed";
 }
 
+function toTransaction(transaction: ApiTransaction): Transaction {
+  const baseAmt =
+    numberValue(transaction.amount_excluding_gst) ||
+    numberValue(transaction.debit_amount) ||
+    numberValue(transaction.received_amount) +
+      numberValue(transaction.balance_amount);
+  const totalWithGst =
+    numberValue(transaction.total_amount_with_gst) ||
+    numberValue(transaction.debit_amount) ||
+    numberValue(transaction.received_amount) +
+      numberValue(transaction.balance_amount);
+  const gstAmt =
+    numberValue(transaction.total_gst_amount) ||
+    (totalWithGst > baseAmt ? totalWithGst - baseAmt : 0);
+
+  return {
+    id: transaction.id,
+    date: formatTransactionDateTime(transaction.amount_taken_date),
+    dateValue: toDateValue(transaction.amount_taken_date),
+    slipNo: transaction.slip_no || "-",
+    invoiceNo: transaction.invoice_no || "",
+    amount: baseAmt,
+    amountExcludingGst: baseAmt,
+    gstAmount: gstAmt,
+    totalWithGst,
+    received: numberValue(transaction.received_amount),
+    balance: numberValue(transaction.balance_amount),
+    status: mapPaymentStatus(transaction.payment_status),
+    paymentMethod: transaction.payment_method || "",
+    remarks: transaction.remarks || "",
+    transactionType: transaction.types || "membership",
+  };
+}
+
 function toMember(
   member: ApiMember,
   summary?: {
@@ -129,6 +165,13 @@ export default function MemberPaymentSummary() {
   const [memberTransactions, setMemberTransactions] = useState<Transaction[]>(
     [],
   );
+  const [transactionPage, setTransactionPage] = useState(1);
+  const [transactionTotalPages, setTransactionTotalPages] = useState(1);
+  const [transactionCount, setTransactionCount] = useState(0);
+  const [summaryTransactionCount, setSummaryTransactionCount] = useState(0);
+  const [transactionsLoading, setTransactionsLoading] = useState(false);
+  const [historyVersion, setHistoryVersion] = useState(0);
+  const transactionRequestId = useRef(0);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
@@ -192,6 +235,45 @@ export default function MemberPaymentSummary() {
     selectedApiMemberRef.current = selectedApiMember;
   }, [selectedApiMember]);
 
+  const loadTransactions = useCallback(
+    async (
+      memberId: string,
+      requestedPage: number,
+      filter: "all" | "Completed" | "Partial" | "Pending" = "all",
+      query = "",
+    ) => {
+      const requestId = ++transactionRequestId.current;
+      setTransactionsLoading(true);
+      setError("");
+      try {
+        const response = await getTransactions({
+          memberId,
+          page: requestedPage,
+          limit: 10,
+          paymentStatus: filter === "all" ? undefined : filter.toLowerCase(),
+          search: query.trim() || undefined,
+        });
+        if (requestId !== transactionRequestId.current) return;
+        setMemberTransactions(response.transactions.map(toTransaction));
+        setTransactionPage(response.page);
+        setTransactionTotalPages(Math.max(1, response.totalPages));
+        setTransactionCount(response.count);
+      } catch (requestError) {
+        if (requestId !== transactionRequestId.current) return;
+        setError(
+          requestError instanceof Error
+            ? requestError.message
+            : "Failed to load transactions.",
+        );
+      } finally {
+        if (requestId === transactionRequestId.current) {
+          setTransactionsLoading(false);
+        }
+      }
+    },
+    [],
+  );
+
   useEffect(() => {
     getGstRate()
       .then((res) => {
@@ -210,48 +292,23 @@ export default function MemberPaymentSummary() {
   const loadSummary = useCallback(async (member: ApiMember) => {
     setSelectedApiMember(member);
     selectedApiMemberRef.current = member;
+    setHistoryVersion((version) => version + 1);
+    setMemberTransactions([]);
+    setTransactionPage(1);
+    setTransactionTotalPages(1);
+    setTransactionCount(0);
+    setSummaryTransactionCount(0);
     setSummaryLoading(true);
     setError("");
     setAiSummary("");
     setAiSummaryError("");
     try {
-      const response = await getMemberSummary(member.id);
+      const [response] = await Promise.all([
+        getMemberSummary(member.id),
+        loadTransactions(member.id, 1),
+      ]);
       setSelectedMember(toMember(member, response.data.summary));
-      setMemberTransactions(
-        response.data.transactions.map((transaction) => {
-          const baseAmt =
-            numberValue(transaction.amount_excluding_gst) ||
-            numberValue(transaction.debit_amount) ||
-            numberValue(transaction.received_amount) +
-              numberValue(transaction.balance_amount);
-          const totalWithGst =
-            numberValue(transaction.total_amount_with_gst) ||
-            numberValue(transaction.debit_amount) ||
-            numberValue(transaction.received_amount) +
-              numberValue(transaction.balance_amount);
-          const gstAmt =
-            numberValue(transaction.total_gst_amount) ||
-            (totalWithGst > baseAmt ? totalWithGst - baseAmt : 0);
-
-          return {
-            id: transaction.id,
-            date: formatTransactionDateTime(transaction.amount_taken_date),
-            dateValue: toDateValue(transaction.amount_taken_date),
-            slipNo: transaction.slip_no || "-",
-            invoiceNo: transaction.invoice_no || "",
-            amount: baseAmt,
-            amountExcludingGst: baseAmt,
-            gstAmount: gstAmt,
-            totalWithGst: totalWithGst,
-            received: numberValue(transaction.received_amount),
-            balance: numberValue(transaction.balance_amount),
-            status: mapPaymentStatus(transaction.payment_status),
-            paymentMethod: transaction.payment_method || "",
-            remarks: transaction.remarks || "",
-            transactionType: transaction.types || "membership",
-          };
-        }),
-      );
+      setSummaryTransactionCount(response.data.summary.transactionCount);
     } catch (requestError) {
       setError(
         requestError instanceof Error
@@ -261,7 +318,7 @@ export default function MemberPaymentSummary() {
     } finally {
       setSummaryLoading(false);
     }
-  }, []);
+  }, [loadTransactions]);
 
   const loadMembers = useCallback(
     async (search = "", requestedPage = 1, preferredMemberId?: string) => {
@@ -272,7 +329,7 @@ export default function MemberPaymentSummary() {
         const response = await getMembers({
           search,
           page: requestedPage,
-          limit: 20,
+          limit: 10,
         });
         setMembers(response.members);
         setPage(response.page);
@@ -291,6 +348,12 @@ export default function MemberPaymentSummary() {
           setSelectedApiMember(null);
           setSelectedMember(null);
           setMemberTransactions([]);
+          setTransactionPage(1);
+          setTransactionTotalPages(1);
+          setTransactionCount(0);
+          setSummaryTransactionCount(0);
+          transactionRequestId.current += 1;
+          setTransactionsLoading(false);
           setAiSummary("");
           setError("No members found.");
         }
@@ -656,38 +719,64 @@ export default function MemberPaymentSummary() {
     }
   }
 
-  function exportStatement() {
-    if (!selectedMember) return;
-    const header = [
-      "Date",
-      "Slip No",
-      "Base Amount",
-      "GST",
-      "Total",
-      "Received",
-      "Pending",
-      "Status",
-    ];
-    const rows = memberTransactions.map((item) =>
-      [
-        item.date,
-        item.slipNo,
-        item.amountExcludingGst ?? item.amount,
-        item.gstAmount ?? 0,
-        item.totalWithGst ?? item.amount,
-        item.received,
-        item.balance,
-        item.status,
-      ].join(","),
-    );
-    const csv = [header.join(","), ...rows].join("\n");
-    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = `${selectedMember.id}-statement.csv`;
-    link.click();
-    URL.revokeObjectURL(url);
+  async function exportStatement() {
+    if (!selectedMember || !selectedApiMember) return;
+    try {
+      const firstPage = await getTransactions({
+        memberId: selectedApiMember.id,
+        page: 1,
+        limit: 100,
+      });
+      const transactions = [...firstPage.transactions];
+      for (
+        let requestedPage = 2;
+        requestedPage <= firstPage.totalPages;
+        requestedPage += 1
+      ) {
+        const response = await getTransactions({
+          memberId: selectedApiMember.id,
+          page: requestedPage,
+          limit: 100,
+        });
+        transactions.push(...response.transactions);
+      }
+      const header = [
+        "Date",
+        "Slip No",
+        "Base Amount",
+        "GST",
+        "Total",
+        "Received",
+        "Pending",
+        "Status",
+      ];
+      const rows = transactions.map(toTransaction).map((item) =>
+        [
+          item.date,
+          item.slipNo,
+          item.amountExcludingGst ?? item.amount,
+          item.gstAmount ?? 0,
+          item.totalWithGst ?? item.amount,
+          item.received,
+          item.balance,
+          item.status,
+        ].join(","),
+      );
+      const csv = [header.join(","), ...rows].join("\n");
+      const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `${selectedMember.id}-statement.csv`;
+      link.click();
+      URL.revokeObjectURL(url);
+    } catch (requestError) {
+      toast.error(
+        requestError instanceof Error
+          ? requestError.message
+          : "Failed to export transactions.",
+      );
+    }
   }
 
   const gstPreview = calcGst(Number(transactionForm.amount || 0), gstRate);
@@ -805,7 +894,7 @@ export default function MemberPaymentSummary() {
                 <div className="min-w-0 xl:col-start-1">
                   <PaymentSummary
                     member={selectedMember}
-                    transactionCount={memberTransactions.length}
+                    transactionCount={summaryTransactionCount}
                   />
                 </div>
                 <div className="min-w-0 space-y-4 xl:col-start-2 xl:row-start-1 xl:row-span-4">
@@ -845,10 +934,25 @@ export default function MemberPaymentSummary() {
                     </FormDialog>
                   ) : null}
                   <TransactionHistory
+                    key={`${selectedApiMember?.id ?? "none"}-${historyVersion}`}
                     transactions={memberTransactions}
+                    page={transactionPage}
+                    totalPages={transactionTotalPages}
+                    totalCount={transactionCount}
+                    loading={transactionsLoading}
                     gstRate={gstRate}
                     onEdit={startEditingTransaction}
                     onDelete={handleDeleteTransaction}
+                    onPageChange={(requestedPage, filter, query) => {
+                      if (selectedApiMember) {
+                        void loadTransactions(
+                          selectedApiMember.id,
+                          requestedPage,
+                          filter,
+                          query,
+                        );
+                      }
+                    }}
                   />
                 </div>
               </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Pencil, Search, Trash2 } from "lucide-react";
 import type { Transaction } from "@/types/member";
 import { formatCurrency, formatMoney } from "./money";
@@ -8,57 +8,42 @@ import PageNavigation from "@/components/ui/PageNavigation";
 
 interface TransactionHistoryProps {
   transactions: Transaction[];
+  page: number;
+  totalPages: number;
+  totalCount: number;
+  loading: boolean;
   gstRate?: number;
   onEdit?: (transaction: Transaction) => void;
   onDelete?: (transaction: Transaction) => void;
+  onPageChange: (page: number, filter: StatusFilter, query: string) => void;
 }
 
 type StatusFilter = "all" | "Completed" | "Partial" | "Pending";
 
 export default function TransactionHistory({
   transactions,
+  page,
+  totalPages,
+  totalCount,
+  loading,
   gstRate = 18,
   onEdit,
   onDelete,
+  onPageChange,
 }: TransactionHistoryProps) {
   const [filter, setFilter] = useState<StatusFilter>("all");
   const [query, setQuery] = useState("");
-  const [page, setPage] = useState(1);
-  const pageSize = 6;
+  const searchTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const counts = useMemo(
-    () => ({
-      all: transactions.length,
-      Completed: transactions.filter((item) => item.status === "Completed")
-        .length,
-      Partial: transactions.filter((item) => item.status === "Partial").length,
-      Pending: transactions.filter((item) => item.status === "Pending").length,
-    }),
-    [transactions],
+  useEffect(
+    () => () => {
+      if (searchTimer.current) clearTimeout(searchTimer.current);
+    },
+    [],
   );
 
-  const filtered = useMemo(() => {
-    const needle = query.trim().toLowerCase();
-    return transactions.filter((item) => {
-      const matchesFilter = filter === "all" || item.status === filter;
-      const matchesQuery =
-        !needle ||
-        item.slipNo.toLowerCase().includes(needle) ||
-        String(item.amount).includes(needle) ||
-        String(item.received).includes(needle) ||
-        item.date.toLowerCase().includes(needle);
-      return matchesFilter && matchesQuery;
-    });
-  }, [transactions, filter, query]);
-
-  const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize));
-  const currentPage = Math.min(page, totalPages);
-  const pageRows = filtered.slice(
-    (currentPage - 1) * pageSize,
-    currentPage * pageSize,
-  );
-
-  const totals = filtered.reduce(
+  const pageRows = transactions;
+  const totals = transactions.reduce(
     (acc, item) => {
       acc.base += item.amountExcludingGst ?? item.amount;
       acc.gst += item.gstAmount ?? 0;
@@ -73,24 +58,29 @@ export default function TransactionHistory({
   return (
     <section
       id="ledger-entries"
+      aria-busy={loading}
       className="min-w-0 w-full rounded-md border border-border bg-white p-3 shadow-[0_12px_40px_rgba(31,35,80,0.06)] sm:p-5"
     >
       <div className="mb-4 flex flex-col gap-3 xl:flex-row xl:items-center xl:justify-between">
         <div className="flex h-10 items-center gap-1 overflow-x-auto rounded-full bg-[#f4f5ff] p-1 text-sm">
           {(
             [
-              ["all", `All Entries (${counts.all})`],
-              ["Completed", `Completed (${counts.Completed})`],
-              ["Partial", `Partial (${counts.Partial})`],
-              ["Pending", `Pending (${counts.Pending})`],
+              [
+                "all",
+                filter === "all" ? `All Entries (${totalCount})` : "All Entries",
+              ],
+              ["Completed", "Completed"],
+              ["Partial", "Partial"],
+              ["Pending", "Pending"],
             ] as const
           ).map(([value, label]) => (
             <button
               key={value}
               type="button"
               onClick={() => {
+                if (searchTimer.current) clearTimeout(searchTimer.current);
                 setFilter(value);
-                setPage(1);
+                onPageChange(1, value, query);
               }}
               className={`h-8 shrink-0 rounded-full px-2.5 text-xs font-medium sm:px-3 sm:text-sm ${
                 filter === value
@@ -100,8 +90,10 @@ export default function TransactionHistory({
             >
               <span className="sm:hidden">
                 {value === "all"
-                  ? `All (${counts.all})`
-                  : `${value} (${counts[value]})`}
+                  ? filter === "all"
+                    ? `All (${totalCount})`
+                    : "All"
+                  : value}
               </span>
               <span className="hidden sm:inline">{label}</span>
             </button>
@@ -112,8 +104,13 @@ export default function TransactionHistory({
           <input
             value={query}
             onChange={(event) => {
-              setQuery(event.target.value);
-              setPage(1);
+              const nextQuery = event.target.value;
+              setQuery(nextQuery);
+              if (searchTimer.current) clearTimeout(searchTimer.current);
+              searchTimer.current = setTimeout(
+                () => onPageChange(1, filter, nextQuery),
+                300,
+              );
             }}
             placeholder="Search slip or amt..."
             aria-label="Search transactions by slip number, amount, or date"
@@ -149,7 +146,21 @@ export default function TransactionHistory({
             </tr>
           </thead>
           <tbody className="text-sm">
-            {pageRows.map((transaction) => (
+            {loading
+              ? Array.from({ length: 10 }, (_, index) => (
+                  <tr
+                    key={`transaction-skeleton-${index}`}
+                    className="animate-pulse border-t border-border"
+                    aria-hidden="true"
+                  >
+                    {Array.from({ length: 9 }, (_, cellIndex) => (
+                      <td key={cellIndex} className="px-3 py-4">
+                        <div className="h-4 rounded bg-slate-200" />
+                      </td>
+                    ))}
+                  </tr>
+                ))
+              : pageRows.map((transaction) => (
               <tr
                 key={transaction.id}
                 className="border-t border-border hover:bg-[#f7f8ff]"
@@ -211,13 +222,13 @@ export default function TransactionHistory({
                   </div>
                 </td>
               </tr>
-            ))}
+              ))}
           </tbody>
-          {filtered.length > 0 ? (
+          {transactions.length > 0 && !loading ? (
             <tfoot>
               <tr className="border-t border-border bg-[#f6f7ff] text-sm font-semibold">
                 <td className="px-3 py-3" colSpan={2}>
-                  Ledger Summary ({filtered.length} Vouchers)
+                  Page Summary ({transactions.length} Vouchers)
                 </td>
                 <td className="px-3 py-3 text-right">
                   {formatCurrency(totals.base, 0)}
@@ -247,7 +258,31 @@ export default function TransactionHistory({
       </div>
 
       <div className="space-y-3 lg:hidden">
-        {pageRows.map((transaction) => (
+        {loading
+          ? Array.from({ length: 10 }, (_, index) => (
+              <div
+                key={`transaction-card-skeleton-${index}`}
+                className="animate-pulse rounded-md border border-border bg-[#f7f8ff] p-3"
+                aria-hidden="true"
+              >
+                <div className="flex items-start justify-between gap-2">
+                  <div className="w-2/3 space-y-2">
+                    <div className="h-4 rounded bg-slate-200" />
+                    <div className="h-3 w-1/2 rounded bg-slate-200" />
+                  </div>
+                  <div className="h-5 w-16 rounded-full bg-slate-200" />
+                </div>
+                <div className="mt-4 grid grid-cols-2 gap-3">
+                  {Array.from({ length: 4 }, (_, fieldIndex) => (
+                    <div key={fieldIndex} className="space-y-1">
+                      <div className="h-3 w-12 rounded bg-slate-200" />
+                      <div className="h-4 w-20 rounded bg-slate-200" />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))
+          : pageRows.map((transaction) => (
           <article
             key={transaction.id}
             className="rounded-md border border-border bg-[#f7f8ff] p-3"
@@ -324,11 +359,11 @@ export default function TransactionHistory({
               </button>
             </div>
           </article>
-        ))}
-        {filtered.length > 0 ? (
+          ))}
+        {transactions.length > 0 && !loading ? (
           <div className="rounded-md border border-border bg-[#f6f7ff] p-3 text-sm">
             <p className="font-semibold">
-              Ledger Summary ({filtered.length} Vouchers)
+              Page Summary ({transactions.length} Vouchers)
             </p>
             <div className="mt-2 grid grid-cols-2 gap-2 text-xs">
               <p>Total: {formatCurrency(totals.total, 0)}</p>
@@ -344,32 +379,32 @@ export default function TransactionHistory({
         ) : null}
       </div>
 
-      {filtered.length === 0 ? (
+      {transactions.length === 0 && !loading ? (
         <div className="py-10 text-center text-sm text-muted">
           No transactions found for this filter.
         </div>
-      ) : (
+      ) : transactions.length > 0 ? (
         <div className="mt-4 flex flex-col gap-3 text-sm text-muted sm:flex-row sm:items-center sm:justify-between">
           <p className="text-xs sm:text-sm">
-            Showing {(currentPage - 1) * pageSize + 1}-
-            {Math.min(currentPage * pageSize, filtered.length)} of{" "}
-            {filtered.length}{" "}
+            Showing {(page - 1) * 10 + 1}-
+            {Math.min((page - 1) * 10 + transactions.length, totalCount)} of{" "}
+            {totalCount}{" "}
             <span className="hidden sm:inline">
-              transactions • Ledger Page {currentPage} of {totalPages}
+              transactions • Ledger Page {page} of {totalPages}
             </span>
             <span className="sm:hidden">
               {" "}
-              • Page {currentPage}/{totalPages}
+              • Page {page}/{totalPages}
             </span>
           </p>
           <PageNavigation
-            page={currentPage}
+            page={page}
             totalPages={totalPages}
-            onPageChange={setPage}
+            onPageChange={(nextPage) => onPageChange(nextPage, filter, query)}
             label="transactions"
           />
         </div>
-      )}
+      ) : null}
     </section>
   );
 }
