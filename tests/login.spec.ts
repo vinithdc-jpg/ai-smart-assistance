@@ -91,7 +91,10 @@ test("invalid staff login remains on the login page", async ({ page }) => {
       await route.fulfill({
         status: 401,
         contentType: "application/json",
-        body: JSON.stringify({ success: false, message: "Invalid credentials" }),
+        body: JSON.stringify({
+          success: false,
+          message: "Invalid credentials",
+        }),
       });
       return;
     }
