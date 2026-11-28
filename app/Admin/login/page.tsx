@@ -133,9 +133,7 @@ export default function AdminLoginPage() {
               />
             </label>
             <label className="form-floating-field">
-              <span className="form-floating-label">
-                Master Passkey
-              </span>
+              <span className="form-floating-label">Master Passkey</span>
               <input
                 id="password"
                 type="password"
@@ -158,7 +156,7 @@ export default function AdminLoginPage() {
                   ? `Try again in ${remainingSeconds}s`
                   : "Sign In to Ledger Console  →"}
             </button>
-          
+
             <Link
               href="/"
               className="text-xs font-medium text-primary hover:text-primary-hover transition-colors focus:outline-none"
@@ -166,7 +164,6 @@ export default function AdminLoginPage() {
               Login as Staff
             </Link>
           </form>
-          
         </div>
       </div>
     </main>

@@ -56,7 +56,10 @@ export default function ClubPaymentStatusChart() {
     };
   }, [selectedClubId, reloadKey]);
 
-  const chartWidth = Math.max(680, chartData.length * 82 + plotLeft + plotRight);
+  const chartWidth = Math.max(
+    680,
+    chartData.length * 82 + plotLeft + plotRight,
+  );
   const plotWidth = chartWidth - plotLeft - plotRight;
   const maximumValue = Math.max(
     1,
@@ -70,7 +73,9 @@ export default function ClubPaymentStatusChart() {
     <section className="rounded-md border border-border bg-card p-4 shadow-sm sm:p-5">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div>
-          <h2 className="text-lg font-bold text-foreground">Club-wise Payment Status</h2>
+          <h2 className="text-lg font-bold text-foreground">
+            Club-wise Payment Status
+          </h2>
           <p className="mt-1 text-sm text-muted-foreground">
             Transaction records by payment status.
           </p>
@@ -103,7 +108,10 @@ export default function ClubPaymentStatusChart() {
           className="mt-5 h-56 animate-pulse rounded-lg bg-muted"
         />
       ) : error ? (
-        <div role="alert" className="mt-5 rounded-lg border border-red-200 bg-red-50 px-4 py-6 text-sm text-red-700">
+        <div
+          role="alert"
+          className="mt-5 rounded-lg border border-red-200 bg-red-50 px-4 py-6 text-sm text-red-700"
+        >
           <div className="flex flex-wrap items-center justify-between gap-3">
             <span>Unable to load club payment status. {error}</span>
             <button
@@ -125,10 +133,19 @@ export default function ClubPaymentStatusChart() {
         </p>
       ) : (
         <>
-          <div className="mt-4 flex flex-wrap gap-x-5 gap-y-2" aria-label="Chart legend">
+          <div
+            className="mt-4 flex flex-wrap gap-x-5 gap-y-2"
+            aria-label="Chart legend"
+          >
             {chartSeries.map((series) => (
-              <span key={series.key} className="flex items-center gap-2 text-xs text-muted-foreground">
-                <span className="h-2.5 w-2.5 rounded-sm" style={{ backgroundColor: series.color }} />
+              <span
+                key={series.key}
+                className="flex items-center gap-2 text-xs text-muted-foreground"
+              >
+                <span
+                  className="h-2.5 w-2.5 rounded-sm"
+                  style={{ backgroundColor: series.color }}
+                />
                 {series.label}
               </span>
             ))}
@@ -138,7 +155,12 @@ export default function ClubPaymentStatusChart() {
               role="img"
               aria-label="Stacked bar chart of pending, partial, and completed payment records by club"
               viewBox={`0 0 ${chartWidth} ${chartHeight}`}
-              style={{ width: chartWidth, maxWidth: "100%", minWidth: 640, height: "auto" }}
+              style={{
+                width: chartWidth,
+                maxWidth: "100%",
+                minWidth: 640,
+                height: "auto",
+              }}
             >
               {Array.from({ length: 5 }, (_, index) => {
                 const value = tickStep * index;
@@ -178,7 +200,8 @@ export default function ClubPaymentStatusChart() {
               {chartData.map((club, index) => {
                 const slotWidth = plotWidth / chartData.length;
                 const barWidth = Math.min(38, slotWidth * 0.56);
-                const barX = plotLeft + slotWidth * index + (slotWidth - barWidth) / 2;
+                const barX =
+                  plotLeft + slotWidth * index + (slotWidth - barWidth) / 2;
                 let currentY = plotBottom;
                 const values = [club.pending, club.partial, club.completed];
                 const segments = chartSeries.map((series, seriesIndex) => {
@@ -187,9 +210,10 @@ export default function ClubPaymentStatusChart() {
                   currentY -= height;
                   return { ...series, value, y: currentY, height };
                 });
-                const label = club.clubName.length > 15
-                  ? `${club.clubName.slice(0, 14)}…`
-                  : club.clubName;
+                const label =
+                  club.clubName.length > 15
+                    ? `${club.clubName.slice(0, 14)}…`
+                    : club.clubName;
 
                 return (
                   <g key={club.clubId}>

@@ -63,7 +63,7 @@ export default function StaffAudit({
             id="staff-report-status"
             value={status}
             onChange={(event) => onStatusChange(event.target.value)}
-            className="!h-12 !rounded-md w-full border-border bg-background px-3 text-xs text-foreground sm:w-40"
+            className="h-12! rounded-md! w-full border-border bg-background px-3 text-xs text-foreground sm:w-40"
           >
             <option value="all">All staff</option>
             <option value="active">Active</option>

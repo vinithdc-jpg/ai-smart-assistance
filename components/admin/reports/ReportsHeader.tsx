@@ -71,22 +71,26 @@ export default function ReportsHeader({
       </div>
 
       <div className="mt-5 flex flex-wrap gap-2 border-t border-border pt-4">
-        {["Today", "Last 7 Days", "Last Month", "This Month", "Custom Range"].map(
-            (item) => (
-            <button
-              type="button"
-              key={item}
-              onClick={() => onRangeChange(item)}
-              className={`rounded-md px-3 py-2 text-xs font-semibold transition ${
-                item === activeRange
-                  ? "bg-primary text-white shadow-sm"
-                  : "bg-primary-soft text-foreground hover:bg-primary/10"
-              }`}
-            >
-              {item}
-            </button>
-          ),
-        )}
+        {[
+          "Today",
+          "Last 7 Days",
+          "Last Month",
+          "This Month",
+          "Custom Range",
+        ].map((item) => (
+          <button
+            type="button"
+            key={item}
+            onClick={() => onRangeChange(item)}
+            className={`rounded-md px-3 py-2 text-xs font-semibold transition ${
+              item === activeRange
+                ? "bg-primary text-white shadow-sm"
+                : "bg-primary-soft text-foreground hover:bg-primary/10"
+            }`}
+          >
+            {item}
+          </button>
+        ))}
       </div>
 
       {activeRange === "Custom Range" && (
@@ -98,7 +102,11 @@ export default function ReportsHeader({
             const formData = new FormData(event.currentTarget);
             const customStartDate = String(formData.get("startDate") || "");
             const customEndDate = String(formData.get("endDate") || "");
-            if (!customStartDate || !customEndDate || customStartDate > customEndDate) {
+            if (
+              !customStartDate ||
+              !customEndDate ||
+              customStartDate > customEndDate
+            ) {
               setDateError("Choose an end date on or after the start date.");
               return;
             }
@@ -108,19 +116,44 @@ export default function ReportsHeader({
         >
           <label className="form-floating-field">
             <span className="form-floating-label">Start date</span>
-            <input name="startDate" type="date" required defaultValue={startDate} placeholder=" " className="form-floating-input h-10 rounded-lg border border-border bg-background px-3 text-sm text-foreground" />
+            <input
+              name="startDate"
+              type="date"
+              required
+              defaultValue={startDate}
+              placeholder=" "
+              className="form-floating-input h-10 rounded-lg border border-border bg-background px-3 text-sm text-foreground"
+            />
           </label>
           <label className="form-floating-field">
             <span className="form-floating-label">End date</span>
-            <input name="endDate" type="date" required defaultValue={endDate} placeholder=" " className="form-floating-input h-10 rounded-lg border border-border bg-background px-3 text-sm text-foreground" />
+            <input
+              name="endDate"
+              type="date"
+              required
+              defaultValue={endDate}
+              placeholder=" "
+              className="form-floating-input h-10 rounded-lg border border-border bg-background px-3 text-sm text-foreground"
+            />
           </label>
-          <button type="submit" className="h-10 rounded-md bg-primary px-4 text-sm font-semibold text-white hover:bg-primary-hover">
+          <button
+            type="submit"
+            className="h-10 rounded-md bg-primary px-4 text-sm font-semibold text-white hover:bg-primary-hover"
+          >
             Apply dates
           </button>
         </form>
       )}
-      {dateError && <p role="alert" className="mt-2 text-sm text-red-600">{dateError}</p>}
-      {exportError && <p role="alert" className="mt-3 text-sm text-red-600">{exportError}</p>}
+      {dateError && (
+        <p role="alert" className="mt-2 text-sm text-red-600">
+          {dateError}
+        </p>
+      )}
+      {exportError && (
+        <p role="alert" className="mt-3 text-sm text-red-600">
+          {exportError}
+        </p>
+      )}
     </section>
   );
 }

@@ -98,181 +98,181 @@ export function ClubManagement({
           ariaLabel={editingClub ? "Edit club" : "Create new club"}
           className="max-w-2xl"
         >
-            <form
-              id="admin-club-edit-form"
-              onSubmit={handleClubSubmit}
-              className="overflow-hidden rounded-xl border border-border bg-white shadow-[0_24px_80px_rgba(19,22,42,0.18)]"
-            >
-          {/* Header */}
-          <div className="border-b border-border px-6 py-5">
-            <div className="flex items-start justify-between gap-4">
-              <div>
-                <h3
-                  id="admin-club-form-title"
-                  className="text-lg font-semibold tracking-tight text-foreground"
-                >
-                  {editingClub ? "Edit Club" : "Create New Club"}
-                </h3>
-
-                <p className="mt-1 text-sm text-muted">
-                  {editingClub
-                    ? "Update the club information and settings."
-                    : "Add a new club to your organization."}
-                </p>
-              </div>
-
-              <button
-                type="button"
-                onClick={resetClubForm}
-                className="rounded-lg px-3 py-2 text-sm font-medium text-muted transition-colors hover:bg-muted/10 hover:text-foreground"
-              >
-                Cancel
-              </button>
-            </div>
-          </div>
-
-          {/* Form Body */}
-          <div className="px-6 py-6">
-            <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-              {/* Club ID */}
-              {!editingClub && (
+          <form
+            id="admin-club-edit-form"
+            onSubmit={handleClubSubmit}
+            className="overflow-hidden rounded-xl border border-border bg-white shadow-[0_24px_80px_rgba(19,22,42,0.18)]"
+          >
+            {/* Header */}
+            <div className="border-b border-border px-6 py-5">
+              <div className="flex items-start justify-between gap-4">
                 <div>
-                  <label htmlFor="club_id" className="form-floating-field">
+                  <h3
+                    id="admin-club-form-title"
+                    className="text-lg font-semibold tracking-tight text-foreground"
+                  >
+                    {editingClub ? "Edit Club" : "Create New Club"}
+                  </h3>
+
+                  <p className="mt-1 text-sm text-muted">
+                    {editingClub
+                      ? "Update the club information and settings."
+                      : "Add a new club to your organization."}
+                  </p>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={resetClubForm}
+                  className="rounded-lg px-3 py-2 text-sm font-medium text-muted transition-colors hover:bg-muted/10 hover:text-foreground"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+
+            {/* Form Body */}
+            <div className="px-6 py-6">
+              <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+                {/* Club ID */}
+                {!editingClub && (
+                  <div>
+                    <label htmlFor="club_id" className="form-floating-field">
+                      <span className="form-floating-label">
+                        Club ID <span className="text-red-500">*</span>
+                      </span>
+                      <input
+                        id="club_id"
+                        type="text"
+                        placeholder=" "
+                        value={clubForm.club_id}
+                        onChange={(event) =>
+                          setClubForm({
+                            ...clubForm,
+                            club_id: event.target.value,
+                          })
+                        }
+                        className={`${fieldClass} w-full form-floating-input`}
+                        required
+                      />
+                    </label>
+
+                    <p className="mt-2 text-xs text-muted">
+                      A unique identifier for this club.
+                    </p>
+                  </div>
+                )}
+
+                {/* Club Title */}
+                <div>
+                  <label htmlFor="club_title" className="form-floating-field">
                     <span className="form-floating-label">
-                      Club ID <span className="text-red-500">*</span>
+                      Club Name <span className="text-red-500">*</span>
                     </span>
-                  <input
-                    id="club_id"
-                    type="text"
-                    placeholder=" "
-                    value={clubForm.club_id}
-                    onChange={(event) =>
-                      setClubForm({
-                        ...clubForm,
-                        club_id: event.target.value,
-                      })
-                    }
-                    className={`${fieldClass} w-full form-floating-input`}
-                    required
-                  />
+                    <input
+                      id="club_title"
+                      type="text"
+                      placeholder=" "
+                      value={clubForm.title}
+                      onChange={(event) =>
+                        setClubForm({
+                          ...clubForm,
+                          title: event.target.value,
+                        })
+                      }
+                      className={`${fieldClass} w-full form-floating-input`}
+                      required
+                    />
+                  </label>
+                </div>
+
+                {/* Phone */}
+                <div>
+                  <label htmlFor="club_phone" className="form-floating-field">
+                    <span className="form-floating-label">Phone Number</span>
+                    <input
+                      id="club_phone"
+                      type="tel"
+                      inputMode="numeric"
+                      placeholder=" "
+                      value={clubForm.phone}
+                      onChange={(event) =>
+                        setClubForm({
+                          ...clubForm,
+                          phone: event.target.value.replace(/\D/g, ""),
+                        })
+                      }
+                      maxLength={15}
+                      pattern="[0-9]{10,15}"
+                      title="Please enter a valid phone number"
+                      className={`${fieldClass} w-full form-floating-input`}
+                    />
                   </label>
 
                   <p className="mt-2 text-xs text-muted">
-                    A unique identifier for this club.
+                    Enter a valid 10–15 digit phone number.
                   </p>
                 </div>
-              )}
 
-              {/* Club Title */}
-              <div>
-                <label htmlFor="club_title" className="form-floating-field">
-                  <span className="form-floating-label">
-                    Club Name <span className="text-red-500">*</span>
-                  </span>
-                <input
-                  id="club_title"
-                  type="text"
-                  placeholder=" "
-                  value={clubForm.title}
-                  onChange={(event) =>
-                    setClubForm({
-                      ...clubForm,
-                      title: event.target.value,
-                    })
-                  }
-                  className={`${fieldClass} w-full form-floating-input`}
-                  required
-                />
-                </label>
-              </div>
+                {/* Status */}
+                <div className="space-y-2">
+                  <label
+                    htmlFor="club_status"
+                    className="text-sm font-medium text-foreground"
+                  >
+                    Club Status <span className="text-red-500">*</span>
+                  </label>
 
-              {/* Phone */}
-              <div>
-                <label htmlFor="club_phone" className="form-floating-field">
-                  <span className="form-floating-label">Phone Number</span>
-                <input
-                  id="club_phone"
-                  type="tel"
-                  inputMode="numeric"
-                  placeholder=" "
-                  value={clubForm.phone}
-                  onChange={(event) =>
-                    setClubForm({
-                      ...clubForm,
-                      phone: event.target.value.replace(/\D/g, ""),
-                    })
-                  }
-                  maxLength={15}
-                  pattern="[0-9]{10,15}"
-                  title="Please enter a valid phone number"
-                  className={`${fieldClass} w-full form-floating-input`}
-                />
-                </label>
+                  <Select
+                    id="club_status"
+                    value={clubForm.status}
+                    onChange={(event) =>
+                      setClubForm({
+                        ...clubForm,
+                        status: event.target.value,
+                      })
+                    }
+                    className="h-10 w-full"
+                  >
+                    <option value="active">Active</option>
+                    <option value="inactive">Inactive</option>
+                  </Select>
 
-                <p className="mt-2 text-xs text-muted">
-                  Enter a valid 10–15 digit phone number.
-                </p>
-              </div>
-
-              {/* Status */}
-              <div className="space-y-2">
-                <label
-                  htmlFor="club_status"
-                  className="text-sm font-medium text-foreground"
-                >
-                  Club Status <span className="text-red-500">*</span>
-                </label>
-
-                <Select
-                  id="club_status"
-                  value={clubForm.status}
-                  onChange={(event) =>
-                    setClubForm({
-                      ...clubForm,
-                      status: event.target.value,
-                    })
-                  }
-                  className="h-10 w-full"
-                >
-                  <option value="active">Active</option>
-                  <option value="inactive">Inactive</option>
-                </Select>
-
-                <p className="text-xs text-muted">
-                  Control whether this club is currently active.
-                </p>
+                  <p className="text-xs text-muted">
+                    Control whether this club is currently active.
+                  </p>
+                </div>
               </div>
             </div>
-          </div>
 
-          {/* Footer */}
-          <div className="flex flex-col-reverse gap-3 border-t border-border bg-muted/5 px-6 py-4 sm:flex-row sm:items-center">
-            <button
-              type="button"
-              onClick={resetClubForm}
-              className="rounded-lg border border-border bg-white px-5 py-2.5 text-sm font-medium text-foreground transition-all hover:bg-muted/10"
-            >
-              Cancel
-            </button>
+            {/* Footer */}
+            <div className="flex flex-col-reverse gap-3 border-t border-border bg-muted/5 px-6 py-4 sm:flex-row sm:items-center">
+              <button
+                type="button"
+                onClick={resetClubForm}
+                className="rounded-lg border border-border bg-white px-5 py-2.5 text-sm font-medium text-foreground transition-all hover:bg-muted/10"
+              >
+                Cancel
+              </button>
 
-            <button
-              type="submit"
-              disabled={clubFormLoading}
-              className="rounded-lg bg-primary px-3 py-2.5 text-sm font-semibold text-white shadow-sm transition-all hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
-            >
-              {clubFormLoading ? (
-                <span className="flex items-center justify-center gap-2">
-                  <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
-                  Saving...
-                </span>
-              ) : editingClub ? (
-                "Update Club"
-              ) : (
-                "Create Club"
-              )}
-            </button>
-          </div>
-            </form>
+              <button
+                type="submit"
+                disabled={clubFormLoading}
+                className="rounded-lg bg-primary px-3 py-2.5 text-sm font-semibold text-white shadow-sm transition-all hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
+              >
+                {clubFormLoading ? (
+                  <span className="flex items-center justify-center gap-2">
+                    <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
+                    Saving...
+                  </span>
+                ) : editingClub ? (
+                  "Update Club"
+                ) : (
+                  "Create Club"
+                )}
+              </button>
+            </div>
+          </form>
         </FormDialog>
       )}
 

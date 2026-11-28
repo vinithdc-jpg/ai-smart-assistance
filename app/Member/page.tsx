@@ -16,9 +16,7 @@ import MemberForm, {
 } from "@/components/Member/MemberForm";
 import WorkspaceHero from "@/components/Member/WorkspaceHero";
 import AiInsightsPanel from "@/components/Member/AiInsightsPanel";
-import {
-  MemberSummarySkeleton,
-} from "@/components/Member/MemberSkeletons";
+import { MemberSummarySkeleton } from "@/components/Member/MemberSkeletons";
 import {
   calcGst,
   formatMemberSince,
@@ -289,36 +287,39 @@ export default function MemberPaymentSummary() {
       .catch(() => undefined);
   }, []);
 
-  const loadSummary = useCallback(async (member: ApiMember) => {
-    setSelectedApiMember(member);
-    selectedApiMemberRef.current = member;
-    setHistoryVersion((version) => version + 1);
-    setMemberTransactions([]);
-    setTransactionPage(1);
-    setTransactionTotalPages(1);
-    setTransactionCount(0);
-    setSummaryTransactionCount(0);
-    setSummaryLoading(true);
-    setError("");
-    setAiSummary("");
-    setAiSummaryError("");
-    try {
-      const [response] = await Promise.all([
-        getMemberSummary(member.id),
-        loadTransactions(member.id, 1),
-      ]);
-      setSelectedMember(toMember(member, response.data.summary));
-      setSummaryTransactionCount(response.data.summary.transactionCount);
-    } catch (requestError) {
-      setError(
-        requestError instanceof Error
-          ? requestError.message
-          : "Failed to load member summary.",
-      );
-    } finally {
-      setSummaryLoading(false);
-    }
-  }, [loadTransactions]);
+  const loadSummary = useCallback(
+    async (member: ApiMember) => {
+      setSelectedApiMember(member);
+      selectedApiMemberRef.current = member;
+      setHistoryVersion((version) => version + 1);
+      setMemberTransactions([]);
+      setTransactionPage(1);
+      setTransactionTotalPages(1);
+      setTransactionCount(0);
+      setSummaryTransactionCount(0);
+      setSummaryLoading(true);
+      setError("");
+      setAiSummary("");
+      setAiSummaryError("");
+      try {
+        const [response] = await Promise.all([
+          getMemberSummary(member.id),
+          loadTransactions(member.id, 1),
+        ]);
+        setSelectedMember(toMember(member, response.data.summary));
+        setSummaryTransactionCount(response.data.summary.transactionCount);
+      } catch (requestError) {
+        setError(
+          requestError instanceof Error
+            ? requestError.message
+            : "Failed to load member summary.",
+        );
+      } finally {
+        setSummaryLoading(false);
+      }
+    },
+    [loadTransactions],
+  );
 
   const loadMembers = useCallback(
     async (search = "", requestedPage = 1, preferredMemberId?: string) => {
@@ -453,7 +454,9 @@ export default function MemberPaymentSummary() {
     try {
       const email = form.email.trim().toLowerCase();
       if (!emailPattern.test(email)) {
-        throw new Error("Please enter a valid email address, such as example@example.com.");
+        throw new Error(
+          "Please enter a valid email address, such as example@example.com.",
+        );
       }
       const pendingAmount = Number(form.pendingAmount);
       if (!Number.isFinite(pendingAmount) || pendingAmount < 0) {
@@ -750,18 +753,20 @@ export default function MemberPaymentSummary() {
         "Pending",
         "Status",
       ];
-      const rows = transactions.map(toTransaction).map((item) =>
-        [
-          item.date,
-          item.slipNo,
-          item.amountExcludingGst ?? item.amount,
-          item.gstAmount ?? 0,
-          item.totalWithGst ?? item.amount,
-          item.received,
-          item.balance,
-          item.status,
-        ].join(","),
-      );
+      const rows = transactions
+        .map(toTransaction)
+        .map((item) =>
+          [
+            item.date,
+            item.slipNo,
+            item.amountExcludingGst ?? item.amount,
+            item.gstAmount ?? 0,
+            item.totalWithGst ?? item.amount,
+            item.received,
+            item.balance,
+            item.status,
+          ].join(","),
+        );
       const csv = [header.join(","), ...rows].join("\n");
       const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
       const url = URL.createObjectURL(blob);
@@ -808,11 +813,7 @@ export default function MemberPaymentSummary() {
   return (
     <ProtectedRoute>
       <div className="min-h-screen overflow-x-hidden bg-background text-foreground antialiased dark:bg-background">
-        <Header
-          onLogout={handleLogout}
-          gstRate={gstRate}
-          clubId={clubId}
-        />
+        <Header onLogout={handleLogout} gstRate={gstRate} clubId={clubId} />
         <main className="mx-auto max-w-7xl space-y-4 overflow-x-hidden px-3 py-4 sm:space-y-6 sm:px-6 sm:py-6 lg:px-8">
           <WorkspaceHero
             gstRate={gstRate}
@@ -851,17 +852,17 @@ export default function MemberPaymentSummary() {
               ariaLabel={editingMember ? "Edit member" : "Add member"}
               className="max-w-4xl"
             >
-            <div id={editingMember ? "member-edit-form" : undefined}>
-              <MemberForm
-                form={form}
-                editing={Boolean(editingMember)}
-                loading={formLoading}
-                error={formError}
-                onChange={handleFormChange}
-                onSubmit={handleMemberSubmit}
-                onCancel={resetForm}
-              />
-            </div>
+              <div id={editingMember ? "member-edit-form" : undefined}>
+                <MemberForm
+                  form={form}
+                  editing={Boolean(editingMember)}
+                  loading={formLoading}
+                  error={formError}
+                  onChange={handleFormChange}
+                  onSubmit={handleMemberSubmit}
+                  onCancel={resetForm}
+                />
+              </div>
             </FormDialog>
           ) : null}
 
@@ -910,27 +911,27 @@ export default function MemberPaymentSummary() {
                       }
                       className="max-w-5xl"
                     >
-                    <div id="transaction-form">
-                      <TransactionForm
-                        form={transactionForm}
-                        editingTransaction={editingTransaction}
-                        memberName={selectedMember.name}
-                        gstRate={gstRate}
-                        amountExcludingGst={gstPreview.amountExcludingGst}
-                        cgstAmount={gstPreview.cgstAmount}
-                        sgstAmount={gstPreview.sgstAmount}
-                        totalAmountWithGst={totalAmountWithGst}
-                        previousPaidVal={previousPaidVal}
-                        currentEnteredPayVal={currentEnteredPayVal}
-                        newEffectiveReceived={newEffectiveReceived}
-                        currentPendingBalance={currentPendingBalance}
-                        error={transactionFormError}
-                        loading={transactionFormLoading}
-                        onChange={handleTransactionFormChange}
-                        onSubmit={handleTransactionSubmit}
-                        onCancel={resetTransactionForm}
-                      />
-                    </div>
+                      <div id="transaction-form">
+                        <TransactionForm
+                          form={transactionForm}
+                          editingTransaction={editingTransaction}
+                          memberName={selectedMember.name}
+                          gstRate={gstRate}
+                          amountExcludingGst={gstPreview.amountExcludingGst}
+                          cgstAmount={gstPreview.cgstAmount}
+                          sgstAmount={gstPreview.sgstAmount}
+                          totalAmountWithGst={totalAmountWithGst}
+                          previousPaidVal={previousPaidVal}
+                          currentEnteredPayVal={currentEnteredPayVal}
+                          newEffectiveReceived={newEffectiveReceived}
+                          currentPendingBalance={currentPendingBalance}
+                          error={transactionFormError}
+                          loading={transactionFormLoading}
+                          onChange={handleTransactionFormChange}
+                          onSubmit={handleTransactionSubmit}
+                          onCancel={resetTransactionForm}
+                        />
+                      </div>
                     </FormDialog>
                   ) : null}
                   <TransactionHistory
@@ -973,7 +974,9 @@ export default function MemberPaymentSummary() {
             <p>Smart Ledger AI • Autonomous Payment & Compliance Core</p>
             <p>
               System Status:{" "}
-              <span className="font-semibold text-emerald-600">Operational</span>{" "}
+              <span className="font-semibold text-emerald-600">
+                Operational
+              </span>{" "}
               • © 2025 Smart Ledger Systems Inc.
             </p>
           </div>

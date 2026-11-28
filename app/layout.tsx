@@ -7,7 +7,7 @@ import "react-toastify/dist/ReactToastify.css";
 import RouteChangeLoader from "@/components/RouteChangeLoader";
 import ToastProvider from "@/components/ToastProvider";
 
-const inter = Inter({subsets:['latin'],variable:'--font-sans'});
+const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
 const geistSans = Geist({
   variable: "--font-geist-sans",

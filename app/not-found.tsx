@@ -1,6 +1,5 @@
 "use client";
 
-
 export default function NotFound() {
   return (
     <main className="relative flex min-h-screen flex-col justify-between overflow-x-hidden bg-background font-sans text-slate-800 selection:bg-indigo-100 selection:text-indigo-900 dark:bg-background">
@@ -82,13 +81,12 @@ export default function NotFound() {
           {/* Description */}
           <p className="mb-8 max-w-lg text-sm leading-relaxed text-slate-600 sm:text-base">
             The transaction trace, club route, or administrative record you are
-            trying to reach doesn&apos;t exist, was archived, or may have relocated
-            in the autonomous ledger graph.
+            trying to reach doesn&apos;t exist, was archived, or may have
+            relocated in the autonomous ledger graph.
           </p>
 
           {/* Actions */}
           <div className="mb-12 flex flex-wrap items-center justify-center gap-3.5">
-            
             <button
               type="button"
               onClick={() => window.history.back()}

@@ -96,9 +96,7 @@ export default function LoginPage() {
         }
       }
       toast.error(
-        requestError instanceof Error
-          ? requestError.message
-          : "Login failed",
+        requestError instanceof Error ? requestError.message : "Login failed",
       );
     } finally {
       setLoading(false);
@@ -140,8 +138,8 @@ export default function LoginPage() {
                   Your club finances. Clearer than ever.
                 </h1>
                 <p className="max-w-md text-sm leading-6 text-blue-50/85 lg:text-[15px]">
-                  Manage members, track payments, and uncover financial
-                  insights with your AI-powered ledger assistant.
+                  Manage members, track payments, and uncover financial insights
+                  with your AI-powered ledger assistant.
                 </p>
               </div>
               <LoginDashboardPreview />
@@ -168,9 +166,7 @@ export default function LoginPage() {
 
             <form onSubmit={handleSubmit} className="mt-6 space-y-4 sm:mt-8">
               <label htmlFor="clubId" className="form-floating-field">
-                <span className="form-floating-label">
-                  Club ID
-                </span>
+                <span className="form-floating-label">Club ID</span>
                 <input
                   id="clubId"
                   name="clubId"
@@ -184,9 +180,7 @@ export default function LoginPage() {
               </label>
 
               <label htmlFor="email" className="form-floating-field">
-                <span className="form-floating-label">
-                  Email address
-                </span>
+                <span className="form-floating-label">Email address</span>
                 <input
                   id="email"
                   name="email"
@@ -200,9 +194,7 @@ export default function LoginPage() {
               </label>
 
               <label htmlFor="password" className="form-floating-field">
-                <span className="form-floating-label">
-                  Password
-                </span>
+                <span className="form-floating-label">Password</span>
                 <input
                   id="password"
                   name="password"
